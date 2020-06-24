@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="FtcMainWindow" parent="GtkApplicationWindow">
+    <property name="title" translatable="yes">자료전송</property>
+    <child>
+      <object class="GtkBox" id="content_box">
+        <property name="visible">True</property>
+        <property name="orientation">horizontal</property>
+        <child>
+          <object class="GtkStack" id="stack_main">
+            <property name="visible">True</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkStack" id="stack_extension">
+            <property name="visible">False</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
