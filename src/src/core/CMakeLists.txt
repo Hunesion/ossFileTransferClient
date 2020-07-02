@@ -4,6 +4,8 @@ add_library(hune_core
             StringUtils.cpp
             TimeUtils.cpp
             EventManager.cpp
+            urlencode.cpp
+            JsonUtils.cpp
             )
 
 IF (CMAKE_BUILD_TYPE MATCHES Debug)
