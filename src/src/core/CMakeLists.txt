@@ -6,7 +6,9 @@ add_library(hune_core
             EventManager.cpp
             urlencode.cpp
             JsonUtils.cpp
-			FileInfo.cpp
+            FileInfo.cpp
+            http.cpp
+			Response.cpp
             )
 
 IF (CMAKE_BUILD_TYPE MATCHES Debug)
