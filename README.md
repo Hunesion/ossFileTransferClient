@@ -47,8 +47,8 @@
 구체적인  일정과  지침은  단계적으로  공유할  예정입니다.
 
 # **기여**
-CONTRIBUTION.md 파일이  공유되면  읽어  주십시오. 당사의  행동강령과  요청접수  절차에  대한  자세한  내용을  확인하실  수  있습니다.
+[CONTRIBUTION.md](https://github.com/HuneOpenUp/ossFileTransferClient/blob/master/CONTRIBUTING.md) 파일을  읽어  주십시오. 당사의  행동강령과  요청접수  절차에  대한  자세한  내용을  확인하실  수  있습니다.
 
 
 # **라이선스**
-이  프로젝트는 LGPL 2.1로  라이선스가  부여되었습니다. 자세한  내용은 LICENSE 파일을  참조하십시오.
+이  프로젝트는 LGPL 2.1로  라이선스가  부여되었습니다. 자세한  내용은 [LICENSE](https://github.com/HuneOpenUp/ossFileTransferClient/blob/master/LICENSE) 파일을  참조하십시오.
