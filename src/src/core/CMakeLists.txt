@@ -8,7 +8,12 @@ add_library(hune_core
             JsonUtils.cpp
             FileInfo.cpp
             http.cpp
-			Response.cpp
+            Response.cpp
+            Logger.cpp
+            FileUtils.cpp
+            model/ValueObject.cpp
+            model/ClientConfig.cpp
+            model/GlobalVar.cpp
             )
 
 IF (CMAKE_BUILD_TYPE MATCHES Debug)
