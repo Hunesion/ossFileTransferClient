@@ -11,6 +11,8 @@ add_library(hune_core
             Response.cpp
             Logger.cpp
             FileUtils.cpp
+            NetUtils.cpp
+            sys_utils.cpp
             model/ValueObject.cpp
             model/ClientConfig.cpp
             model/GlobalVar.cpp
