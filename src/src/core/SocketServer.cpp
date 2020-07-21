@@ -27,7 +27,7 @@ SocketServer *SocketServer::getInstance(){
 
 
 
-static gboolean SocketServer::socketServerConnectCallback(GThreadedSocketService *service,
+static gboolean socketServerConnectCallback(GThreadedSocketService *service,
                GSocketConnection      *connection,
                GObject                *source_object,
                gpointer                user_data) {
