@@ -25,6 +25,63 @@ SocketServer *SocketServer::getInstance(){
     return rv ; 
 }
 
+
+
+static gboolean socketServerConnectCallback(GThreadedSocketService *service,
+               GSocketConnection      *connection,
+               GObject                *source_object,
+               gpointer                user_data) {
+    SocketServer *socketServer = NULL;
+    GInputStream *istream = NULL;
+    GOutputStream *ostream = NULL;
+    GError *error = NULL;
+    std::string data;
+    char buffer[1024] = { 0, };
+    gsize readTotalSize = 0, readSize = 0, totalLength = 0;
+
+    FTC_LOG_DEBUG("socket_server_connect_cb (Started) Service RefCount = %d IS MAIN THREAD = %d", G_OBJECT(service)->ref_count, ftc_is_main_thread()); 
+
+    if (! user_data) {
+        return false ;
+    }
+    socketServer = (SocketServer*)user_data;
+
+    try
+    {
+        istream = g_io_stream_get_input_stream(G_IO_STREAM(connection));    
+        if (! istream) {
+            throw std::runtime_error("Input Stream 얻기 실패");
+        }
+
+        do
+        {
+            readSize = g_input_stream_read(istream, buffer, 1024, NULL, &error);
+
+            if (readSize <= 0) {
+                break;
+            }
+            data.append(buffer);
+            readTotalSize += readSize;
+        } while (true);
+
+        socketServer->work(data);
+    }
+    catch(const std::runtime_error& e)
+    {
+        FTC_LOG("socketServerConnectCallback exception %s", e.what());
+    }
+
+    FTC_LOG_DEBUG("socket_server_connect_cb (Stoped) Service RefCount = %d IS MAIN THREAD = %d", G_OBJECT(service)->ref_count, ftc_is_main_thread()); 
+
+    if (error) {
+        g_error_free(error);
+        error = NULL;
+    }
+
+    return false ; 
+}
+
+
 void SocketServer::destroyInstance(){
     
     if (SocketServer::s_instance){
@@ -167,59 +224,7 @@ bool SocketServer::stop(){
     return rv ; 
 }
 
-gboolean SocketServer::socketServerConnectCallback(GThreadedSocketService *service,
-               GSocketConnection      *connection,
-               GObject                *source_object,
-               gpointer                user_data) {
-    SocketServer *socketServer = NULL;
-    GInputStream *istream = NULL;
-    GOutputStream *ostream = NULL;
-    GError *error = NULL;
-    std::string data;
-    char buffer[1024] = { 0, };
-    gsize readTotalSize = 0, readSize = 0, totalLength = 0;
 
-    FTC_LOG_DEBUG("socket_server_connect_cb (Started) Service RefCount = %d IS MAIN THREAD = %d", G_OBJECT(service)->ref_count, ftc_is_main_thread()); 
-
-    if (! user_data) {
-        return false ;
-    }
-    socketServer = (SocketServer*)user_data;
-
-    try
-    {
-        istream = g_io_stream_get_input_stream(G_IO_STREAM(connection));    
-        if (! istream) {
-            throw std::runtime_error("Input Stream 얻기 실패");
-        }
-
-        do
-        {
-            readSize = g_input_stream_read(istream, buffer, 1024, NULL, &error);
-
-            if (readSize <= 0) {
-                break;
-            }
-            data.append(buffer);
-            readTotalSize += readSize;
-        } while (true);
-
-        socketServer->work(data);
-    }
-    catch(const std::runtime_error& e)
-    {
-        FTC_LOG("socketServerConnectCallback exception %s", e.what());
-    }
-
-    FTC_LOG_DEBUG("socket_server_connect_cb (Stoped) Service RefCount = %d IS MAIN THREAD = %d", G_OBJECT(service)->ref_count, ftc_is_main_thread()); 
-
-    if (error) {
-        g_error_free(error);
-        error = NULL;
-    }
-
-    return false ; 
-}
 
 bool SocketServer::work(std::string data) {
     bool rv = false;

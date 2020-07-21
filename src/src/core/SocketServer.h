@@ -8,19 +8,22 @@
 
 BEGIN_FTC_CORE
 
-typedef struct _Socket {
-    GSocketService *service;
-    GSocketAddress *listening_addr;  
-    int port;
 
-    _Socket() {
-        service = NULL;
-        listening_addr = NULL;
-        port = 0;
-    }
-} Socket;
 
 class SocketServer{
+
+private : 
+    typedef struct _Socket {
+        GSocketService *service;
+        GSocketAddress *listening_addr;  
+        int port;
+
+        _Socket() {
+            service = NULL;
+            listening_addr = NULL;
+            port = 0;
+        }
+    } Socket;
 public:
     static SocketServer *getInstance(); 
     static void destroyInstance(); 
@@ -41,10 +44,6 @@ private:
 
     std::list<std::string> downloadFile(std::string requestInfoUid, std::string localIp, const std::string &dir);
 
-    static gboolean socketServerConnectCallback(GThreadedSocketService *service,
-               GSocketConnection      *connection,
-               GObject                *source_object,
-               gpointer                user_data);
 private: 
     static SocketServer *s_instance ; 
     static volatile bool s_stop ; 
