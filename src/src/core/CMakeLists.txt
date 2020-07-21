@@ -13,6 +13,7 @@ add_library(hune_core
             FileUtils.cpp
             NetUtils.cpp
             sys_utils.cpp
+            SocketServer.cpp
             model/ValueObject.cpp
             model/ClientConfig.cpp
             model/GlobalVar.cpp
