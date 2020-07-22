@@ -7,7 +7,7 @@
 /**
  * FTC C# Client 환경 설정 파일 정보
  **/
-#define FTC_GSCHEMA_ID  "com.hunesion.ftcapp"
+#define FTC_GSCHEMA_ID  "org.hunesion.app"
 
 //  GSETTING KEY
 #define FTC_URL "ftcurl"

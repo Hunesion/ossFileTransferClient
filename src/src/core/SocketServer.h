@@ -29,6 +29,7 @@ public:
     static void destroyInstance(); 
     
     bool start();
+    bool work(std::string data);
 
     virtual ~SocketServer(); 
 private: 
@@ -37,7 +38,7 @@ private:
     bool start(int port);
     bool stop();  
 
-    bool work(std::string data);
+    
     bool clipboard(std::string &data, std::vector<std::string> &splitData);
     bool urlRedirection(std::string &data, std::vector<std::string> &splitData);
     bool autoDownload(std::string &data, std::vector<std::string> &splitData);
