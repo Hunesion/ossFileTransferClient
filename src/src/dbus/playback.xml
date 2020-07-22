@@ -1,0 +1,8 @@
+<node>
+    <interface name="org.hunesion.app.playback">
+        <method name="invokeClientActionCallback">
+            <arg name="seq" direction="in" type="u"/>
+            <arg name="json" direction="in" type="s"/>
+        </method>
+    </interface>
+</node>
