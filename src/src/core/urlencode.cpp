@@ -46,14 +46,19 @@ std::string url_decode(std::string &src) {
     char ch;
     int i, ii;
     for (i=0; i<src.length(); i++) {
-        if (int(src[i])==37) {
+        if (src[i] == '%') {
             sscanf(src.substr(i+1,2).c_str(), "%x", &ii);
-            ch=static_cast<char>(ii);
-            ret+=ch;
-            i=i+2;
+            ch = static_cast<char>(ii);
+            ret += ch;
+            i += 2;
         } else {
-            ret+=src[i];
+            if(src[i] == '+') {
+                ret += ' ';
+            }
+            else {
+                ret += src[i];
+            }
         }
     }
-    return (ret);
+    return ret;
 }
