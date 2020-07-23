@@ -43,22 +43,27 @@ std::string url_encode(const std::string &value) {
 
 std::string url_decode(std::string &src) {
     std::string ret;
-    char ch;
-    int i, ii;
-    for (i=0; i<src.length(); i++) {
-        if (src[i] == '%') {
-            sscanf(src.substr(i+1,2).c_str(), "%x", &ii);
-            ch = static_cast<char>(ii);
+    size_t length = src.length(), i;
+    char ch, hi, low;
+    for (i = 0; i < length; i++) {
+
+        if (src[i] == '%' && i < length - 2 && isxdigit(src[i + 1]) && isxdigit(src[i + 2])) {
+
+            hi = src[i + 1];
+            low = src[i + 2];
+
+            hi = hi <= '9' ? hi - '0' : hi <= 'Z' ? hi - 'A' + 10 : hi - 'a' + 10;
+            low = low <= '9' ? low - '0' : low <= 'Z' ? low - 'A' + 10 : low - 'a' + 10;
+
+            ch = (hi << 4) + low;
             ret += ch;
             i += 2;
+        } else if(src[i] == '+') {
+            ret += ' ';
         } else {
-            if(src[i] == '+') {
-                ret += ' ';
-            }
-            else {
-                ret += src[i];
-            }
+            ret += src[i];
         }
     }
+
     return ret;
 }
