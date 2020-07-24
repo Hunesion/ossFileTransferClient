@@ -12,6 +12,7 @@
 #ifndef _FTC_SYS_UTILS_H_
 #define _FTC_SYS_UTILS_H_
 
+#include <gio/gio.h>
 #include <string>
 
 std::string getIp();
@@ -23,6 +24,7 @@ unsigned long int getThreadId();
 void ftc_system_init(); 
 bool ftc_is_main_thread(); 
 int  ftc_run_xdg_open(const std::string &param);
+int  ftc_open_uri(const std::string &param);
 
 
 #endif /* _FTC_SYS_UTILS_H_ */
