@@ -6,6 +6,8 @@ add_library(hune_ui
             ftcapplication.cpp
             ftcmainwindow.cpp
             ../dbus/playback.c
+            ../webkit/ftcwebkit.cpp
+            ../webkit/ftcdbusserver.cpp
             )
 
 TARGET_LINK_LIBRARIES(hune_ui ${GTK3_LIBRARIES} ${WEBKIT_LIBRARIES} ${OPENSSL_LIBRARIES} hune_core json-glib-1.0)
