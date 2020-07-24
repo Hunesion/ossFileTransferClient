@@ -793,7 +793,7 @@ bool http_download_file(const char *url, const HTTP_PARAM *param, const HTTP_HEA
     GError *error = NULL;
     FileInfo fi;
     char buffer[4096] = { 0, };
-    gsize read_byte = 0, total_read_bytes = 0, content_length;
+    gsize read_byte = 0, total_read_bytes = 0, write_byte = 0, content_length;
     int status = 0 ; 
 
     if (url == NULL || filepath == NULL) {
@@ -855,12 +855,16 @@ bool http_download_file(const char *url, const HTTP_PARAM *param, const HTTP_HEA
     }
 
     do {
-        read_byte = g_input_stream_read(istream, buffer, 4096, NULL, &error);
-        if (read_byte <= 0) {
+        read_byte = g_input_stream_read(istream, buffer, sizeof(buffer), NULL, &error);
+        if (read_byte == 0) {
             break;
+        } else if (read_byte < 0) {
+            goto END;
         }
 
-        g_output_stream_write(G_OUTPUT_STREAM(fostream), buffer, read_byte, NULL, &error);
+        if (g_output_stream_write_all(G_OUTPUT_STREAM(fostream), buffer, read_byte, &write_byte, NULL, &error) == false) {
+            goto END;
+        }
 
         total_read_bytes += read_byte;
     } while (true);
