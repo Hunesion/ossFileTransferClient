@@ -20,6 +20,7 @@
 #include <libsoup/soup.h>
 #include <json-glib/json-glib.h>
 #include "http.h"
+#include "urlencode.h"
 #include "EventManager.h"
 #include "Event.h"
 #include "FileInfo.h"
@@ -194,7 +195,7 @@ static void http_param_append(std::stringstream &ss , const std::string &key, co
     }else {
         ss << key; 
         ss << "="; 
-        ss << value ; 
+        ss << url_encode(value); 
     }
 }
 
