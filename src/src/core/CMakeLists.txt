@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 add_library(hune_core  
+            base64.cpp
             StringUtils.cpp
             TimeUtils.cpp
             EventManager.cpp
