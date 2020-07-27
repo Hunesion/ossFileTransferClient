@@ -60,7 +60,7 @@ static gboolean socketServerConnectCallback(GThreadedSocketService *service,
             if (readSize <= 0) {
                 break;
             }
-            data.append(buffer);
+            data.append(buffer, readSize);
             readTotalSize += readSize;
         } while (true);
 

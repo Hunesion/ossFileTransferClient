@@ -25,8 +25,7 @@ namespace FileUtils
         GFile *file = NULL;
         GOutputStream *stream = NULL;
         GError *error = NULL;
-        unsigned int outLen = 0;
-        gsize writeBytes = 0;
+        gsize outLen = 0, writeBytes = 0;
         bool rv = false, exist = false;
 
         if (filepath == NULL || buffer == NULL) {
@@ -63,7 +62,7 @@ namespace FileUtils
                 throw 1;
             }
 
-            if (g_output_stream_write_all(stream, buffer, len, (gsize*)&outLen, NULL, &error) == false) {
+            if (g_output_stream_write_all(stream, buffer, len, &outLen, NULL, &error) == false) {
                 throw 2;
             }
 
@@ -144,7 +143,7 @@ namespace FileUtils
                 if (readBytes <= 0) {
                     break;
                 }
-                rv += buffer;
+                rv.append(buffer, readBytes);
             } while (true);
         }
         catch(const std::runtime_error& e)
