@@ -259,7 +259,9 @@ namespace FileUtils
         dir = fi.getPath();
         filename = fi.getFileName();
         extension = "." + getFileExtension(filename.c_str());
-        StringUtils::replace(filename, extension, "");
+        if (StringUtils::endsWith(filename, extension.c_str())) {
+            filename = filename.substr(0, filename.length() - extension.length());
+        }
         
         do {
             indexFilename = filename;
