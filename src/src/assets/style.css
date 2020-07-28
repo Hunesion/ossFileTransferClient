@@ -1,0 +1,325 @@
+#default_background_window {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    opacity: 1;
+}
+
+#default_background_page {
+    background: #F5F6F8 0% 0% no-repeat padding-box;
+    opacity: 1;
+}
+
+#box_background_white {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+}
+
+#box_detail_header_background {
+    background: #DEE2E6 0% 0% no-repeat padding-box;
+    opacity: 1;    
+}
+
+#box_detail_header_sub_title {
+    background: #DEE2E6 0% 0% no-repeat padding-box;
+    border-radius: 4px 4px 0px 0px;
+    opacity: 1;
+}
+
+#box_border {
+    border: 2px dashed #C1C3C7;
+    border-radius: 4px;
+    opacity: 1;
+}
+
+#label_login_location {
+    font: 40px Noto Sans CJK KR;
+    letter-spacing: -0.04px;
+    color: #343A40;
+    opacity: 1;
+}
+
+#entry_default {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #DEDEDF;
+    border-radius: 4px;
+    opacity: 1;
+
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #000000;
+}
+
+#entry_select_user {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #DEDEDF;
+    border-radius: 4px;
+    opacity: 1;
+
+    font: 14px Lato;
+    letter-spacing: 0;
+    color: #000000;
+    opacity: 1;
+}
+
+#button_is {
+    background: #5FC3A5 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    font: 15px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_is:active{
+    background: #5FC3A5 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    font: 15px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_es {
+    background: #4F8DF4 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    font: 15px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_es:active{
+    background: #4F8DF4 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    font: 15px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_small_is {
+    background: #5FC3A5 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_small_is:active{
+    background: #5FC3A5 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_small_es {
+    background: #4F8DF4 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_small_es:active{
+    background: #4F8DF4 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_normal_small {
+    background: #BEBEBE 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#button_normal_small2 {
+    background: #BEBEBE 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #030504;
+}
+
+
+
+#button_choice_directory {
+    background: #FFE999 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+
+    font: 15px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #996425;
+}
+
+#checkbox_id_save {
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #6C757D;
+    opacity: 1;
+}
+
+#checkbox_network_name {
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #000000;
+    opacity: 1;    
+}
+
+#link_button_login_page {
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #9B9B9B;
+    opacity: 1;
+}
+
+#box_user_header_is {
+    background: #5FC3A5 0% 0% no-repeat padding-box;
+    opacity: 1;
+}
+
+#box_user_header_es {
+    background: #4F8DF4 0% 0% no-repeat padding-box;
+    opacity: 1;
+}
+
+
+#label_user_menu {
+    font: 16px Noto Sans CJK KR;
+    letter-spacing: -0.02px;
+    color: #FFFFFF;
+    opacity: 1;
+}
+
+#label_header_send_recv {
+    font: 15px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #000000;
+    opacity: 1;
+}
+
+#label_dnd_explain {
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #9B9B9B;
+    opacity: 1;
+}
+
+#label_recv_new_count {
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #030504;
+    opacity: 1;
+}
+
+#label_recv_info_title_bold {
+    font: Bold 12px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #000000;
+    opacity: 1;
+}
+
+#label_recv_info_title {
+    font: 12px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #000000;
+    opacity: 1;
+}
+
+#label_recv_info_contents_is {
+    font: 10px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #5FC3A5;
+    opacity: 1;
+}
+
+#label_recv_info_contents_es {
+    font: 10px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #4F8DF4;
+    opacity: 1;
+}
+
+#label_send_progress {
+    font: 10px Nirmala UI;
+    letter-spacing: -0.01px;
+    color: #060706;
+    opacity: 1;    
+}
+
+#button_send_cancel {
+    background: #BEBEBE 0% 0% no-repeat padding-box;
+    border-radius: 4px;
+    opacity: 1;
+
+    font: 15px Noto Sans CJK KR;
+    letter-spacing: 0;
+    color: #FFFFFF;
+}
+
+#label_detail_title {
+    font: 16px Noto Sans CJK KR;
+    letter-spacing: -0.02px;
+    color: #000000;
+    opacity: 1;
+}
+
+#label_send_detail_sub_title {
+    font: 14px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #000000;
+    opacity: 1;    
+}
+
+#label_send_detail_sub_title_select {
+    font: 14px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #4F8DF4;
+    opacity: 1;    
+}
+
+#label_send_detail_sub_title_detail {
+    font: 11px Noto Sans CJK KR;
+    letter-spacing: -0.01px;
+    color: #000000;
+    opacity: 1;    
+}
+
+#progressbar_total_upload > trough{
+    min-height: 40px;
+}
+
+#progressbar_total_upload > trough > progress{
+    min-height: 40px;
+}
+
+#progressbar_individual_upload > trough {
+    min-width: 81px;
+    min-height: 6px;
+}
+
+#progressbar_individual_upload > trough > progress{
+    min-height: 6px;
+}
+
+#progressbar_individual_upload2 > trough {
+    min-width: 60px;
+    min-height: 6px;
+}
+
+#progressbar_individual_upload2 > trough > progress{
+    min-height: 6px;
+}
