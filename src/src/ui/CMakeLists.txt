@@ -2,9 +2,11 @@ cmake_minimum_required (VERSION 3.8)
 
 
 add_library(hune_ui 
+            FtcEventCallback.cpp
             ftcuicommon.cpp
             ftcapplication.cpp
             ftcmainwindow.cpp
+            ftcloginpage.cpp
             ../dbus/playback.c
             ../webkit/ftcwebkit.cpp
             ../webkit/ftcdbusserver.cpp

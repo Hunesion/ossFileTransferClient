@@ -34,6 +34,13 @@ G_DEFINE_TYPE_WITH_PRIVATE(FtcMainWindow, ftc_main_window, GTK_TYPE_APPLICATION_
 
 
 ////////////////////////////////
+static FtcMainWindow *s_win = NULL ; 
+static bool           s_is_extension = false;
+
+gpointer ftc_ui_get_main_window()
+{
+  return s_win;
+}
 
 //////////  FTC 함수  //////////
 
