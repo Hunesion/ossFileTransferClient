@@ -24,6 +24,7 @@
 #include "urlencode.h"
 #include "Logger.h"
 #include "SocketServer.h"
+#include "Request.h"
 
 bool ftc_core_init(); 
 void ftc_core_dispose(); 

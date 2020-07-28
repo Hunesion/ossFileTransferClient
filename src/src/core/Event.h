@@ -13,6 +13,6 @@
 #ifndef _FTC_CORE_EVENT_H_
 #define _FTC_CORE_EVENT_H_
 
-
+#define FTC_CORE_LOGIN_EVENT "Ftc::Core::Login"
 
 #endif /* _FTC_CORE_EVENT_H_ */
