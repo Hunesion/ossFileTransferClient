@@ -7,6 +7,7 @@ add_library(hune_ui
             ftcapplication.cpp
             ftcmainwindow.cpp
             ftcloginpage.cpp
+			ftchomepage.cpp
             ../dbus/playback.c
             ../webkit/ftcwebkit.cpp
             ../webkit/ftcdbusserver.cpp
