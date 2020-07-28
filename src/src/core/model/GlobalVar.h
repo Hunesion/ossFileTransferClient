@@ -16,15 +16,19 @@
 
 #include "ClientConfig.h"
 #include "ValueObject.h"
+#include "User.h"
 
 
 BEGIN_FTC_CORE
 namespace GlobalVar
 {
     void init(); 
-    void setFtcUrl(const char *url);
+
     const char *getFtcUrl();
     ClientConfig &getClientConfig(); 
+    const LoginLocation& getLoginLocation();  
+    const User& getUser(); 
+
     void dispose();
 } // namespace GlobalVar
 

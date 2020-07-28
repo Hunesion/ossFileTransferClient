@@ -63,4 +63,47 @@ void BaseValue::clear(){
         this->_node = nullptr ; 
     }
 }
+
+/**
+ * Begin Login Location  
+ **/
+LoginLocation::LoginLocation():BaseValue(){
+}
+LoginLocation::~LoginLocation(){
+    this->clear(); 
+}
+bool LoginLocation::parseJsonNode(JsonNode *node)  {
+    bool rv = false ; 
+    JsonObject *jobj = NULL;
+    if (!node) return rv ; 
+
+    jobj = JsonUtils::getObject(node); 
+    if (!jobj) {
+        return rv ; 
+    }
+
+    if (JsonUtils::getStdString(node, RESULT_KEY).compare(RESULT_SUCCESS) != 0) {
+        this->_error_msg = JsonUtils::getStdString(node, "message");
+        return rv ; 
+    } 
+
+    this->_location = JsonUtils::getStdString(node, "location"); 
+    this->_name = JsonUtils::getStdString(node, "name");
+    this->_network_id = JsonUtils::getStdString(node, "network_id");
+
+    if (this->_name.empty() || this->_location.empty()) return rv ; 
+
+    rv = true ; 
+    return rv ;
+}
+bool LoginLocation::internalClear()  {
+    this->_location.clear(); 
+    this->_name.clear();
+    this->_network_id.clear();
+    this->_error_msg.clear();
+    return true ; 
+}
+/**
+ * End Login Location 
+ **/ 
 END_FTC_CORE

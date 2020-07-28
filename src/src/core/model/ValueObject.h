@@ -41,5 +41,23 @@ protected:
     JsonNode *_node ; 
 }; 
 
+class LoginLocation : public BaseValue{
+public:
+    LoginLocation(); 
+    virtual ~LoginLocation(); 
+    const JsonObject* getNetwork() const ;
+
+protected :
+    virtual bool parseJsonNode(JsonNode *node) override ; 
+    virtual bool internalClear() override ; 
+
+    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _location, Location); 
+    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _name, Name);
+    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _network_id, NetworkId);
+    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _error_msg, ErrorMsg);
+private :  
+}; 
+
+
 END_FTC_CORE
 #endif /* _FTC_CORE_MODEL_VALUE_OBJECT_H_ */

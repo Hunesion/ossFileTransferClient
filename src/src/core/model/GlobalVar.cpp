@@ -17,6 +17,8 @@
 BEGIN_FTC_CORE
 
 static ClientConfig s_ClientConfig ; 
+static LoginLocation s_LoginLocation ; 
+static User s_User ; 
 
 namespace GlobalVar
 {
@@ -30,6 +32,14 @@ namespace GlobalVar
 
     const char *getFtcUrl() {
         return s_ClientConfig.getFtcUrl().c_str(); 
+    }
+
+    const LoginLocation& getLoginLocation(){
+        return s_LoginLocation; 
+    }  
+
+    const User& getUser(){
+        return s_User; 
     }
 
     void dispose() {

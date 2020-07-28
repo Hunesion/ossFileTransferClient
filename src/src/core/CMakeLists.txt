@@ -1,6 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 add_library(hune_core  
+            core.cpp
             base64.cpp
             StringUtils.cpp
             TimeUtils.cpp
@@ -18,6 +19,7 @@ add_library(hune_core
             model/ValueObject.cpp
             model/ClientConfig.cpp
             model/GlobalVar.cpp
+            model/User.cpp
             )
 
 IF (CMAKE_BUILD_TYPE MATCHES Debug)
