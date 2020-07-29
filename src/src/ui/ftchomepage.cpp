@@ -1,5 +1,6 @@
 #include "ftchomepage.h"
 #include "ftchomeheadersendbox.h"
+#include "ftchomedndsubpage.h"
 #include "ftchomeheaderrecvbox.h"
 #include "ftchomeheadersendhistorybox.h"
 #include "ftcmainwindow.h"
@@ -31,6 +32,8 @@ struct _FtcHomePagePrivate
     FtcHomeHeaderSendBox *header_send_box;
     FtcHomeHeaderRecvBox *header_recv_box;
     FtcHomeHeaderSendHistoryBox *header_send_history_box;
+
+    FtcHomeDndSubPage *dnd_subpage;
 
     //  유저 메뉴
     GtkMenu     *menu_user;
@@ -135,12 +138,6 @@ static void ftc_home_page_on_button_press_event_box_toolbar_menu(GtkWidget *widg
 static void ftc_home_page_set_recv_request_new_count(FtcHomePage *page);
 
 static void ftc_home_page_show_send_history(FtcHomePage *page);
-
-static void ftc_home_page_send_clipboard(FtcHomePage *page);
-
-static bool ftc_home_page_is_show_approval_menu(FtcHomePage *page, int *approval_stand_by_cnt, int *approval_after_check_cnt);
-
-static bool ftc_home_page_is_show_user_approval_menu(FtcHomePage *page, int *approval_user_stand_by_cnt, int *approval_user_after_check_cnt);
 ///////////////////////////////////////////////////////////////////
 
 static void
@@ -210,19 +207,9 @@ ftc_home_page_init (FtcHomePage *page)
     user_name = Ftc::Core::GlobalVar::getUser().getContact() + "(" + Ftc::Core::GlobalVar::getUser().getUserId() + ")" "님";
     gtk_label_set_label(priv->lbl_user_menu, user_name.c_str());
 
-    //  Recv Header 설정 -> RecvList페이지에서 header_recv_box로 데이터를 전달해야 함
-    priv->header_recv_box = ftc_home_header_recv_box_new(page, FTC_VIEW_HOME_SUB_PAGE_DND);
-    gtk_stack_add_named(priv->stack_header_send_recv, GTK_WIDGET(priv->header_recv_box), FTC_VIEW_HOME_HEADER_RECV);
-
-    //  Send Header 설정
-    priv->header_send_box = ftc_home_header_send_box_new(page);
-    gtk_stack_add_named(priv->stack_header_send_recv, GTK_WIDGET(priv->header_send_box), FTC_VIEW_HOME_HEADER_SEND);
-
-    //  Send Header 보여준다.
-    gtk_stack_set_visible_child_name(priv->stack_header_send_recv, FTC_VIEW_HOME_HEADER_SEND);
-
-    priv->header_send_history_box = ftc_home_header_send_history_box_new(page);
-    gtk_stack_add_named(priv->stack_header_send_recv, GTK_WIDGET(priv->header_send_history_box), FTC_VIEW_HOME_HEADER_SEND_HISTORY);
+    //  stack_send_info 에 기본 drag and drop & recv 화면 설정
+    priv->dnd_subpage = ftc_home_dnd_sub_page_new(page);
+    gtk_stack_add_named(priv->stack_list_send_recv, GTK_WIDGET(priv->dnd_subpage), FTC_VIEW_HOME_SUB_PAGE_DND);
 
     //  DND 페이지를 보여준다.
     gtk_stack_set_visible_child_name(priv->stack_list_send_recv, FTC_VIEW_HOME_SUB_PAGE_DND);
@@ -454,6 +441,24 @@ ftc_home_page_update_sub_page_event(Ftc::Core::Event *evt)
     }
 
     child_name = gtk_stack_get_visible_child_name(GTK_STACK(priv->stack_header_send_recv));
+
+    if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_DND) {
+        if (GTK_IS_STACK(priv->stack_list_send_recv) && FTC_IS_HOME_DND_SUB_PAGE(priv->dnd_subpage)) {
+            if ((strcmp(child_name, FTC_VIEW_HOME_HEADER_SEND) != 0) && GTK_IS_STACK(priv->stack_header_send_recv)) {
+                gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_header_send_recv), FTC_VIEW_HOME_HEADER_SEND);
+            }
+            if (ftc_ui_is_extension_widnow() == true) {
+                ftc_ui_set_extension_window(ftc_ui_get_main_window(), false);
+            }
+            gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_DND);
+        }
+    } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_SEND_LIST) {
+        
+    } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_RECV_LIST) {    
+        
+    } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_SEND_HISTORY) {
+        
+    }
 }
 
 static void
@@ -542,6 +547,13 @@ ftc_home_page_show_last_recv_request_event(Ftc::Core::Event *evt) {
     priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
     if (! priv) {
         return;
+    }
+
+    if (priv->dnd_subpage) {
+        if (! param->ftc_request) {
+            return;
+        }
+        ftc_home_dnd_sub_page_update_last_request(priv->dnd_subpage, (Ftc::Core::GlobalStruct::FtcRequest*)param->ftc_request);
     }
 
     ftc_home_page_set_recv_request_new_count(page);
@@ -634,94 +646,470 @@ ftc_home_page_recv_download_all_event(Ftc::Core::Event *evt)
     }
 }
 
+static void 
+ftc_home_page_on_activate_menu_it_my_file_send_policy(GtkWidget *widget, gpointer data)
+{
+    GtkWindow *main_window = GTK_WINDOW(ftc_ui_get_main_window());
+    std::string url;
+
+    if (! main_window || ! widget || ! data) {
+        return;
+    }
+
+    url = "INIT_PACK_FILE_POLICY_POP";
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window),  url.c_str(), NULL, "내 파일전송 정책", 600, 370); 
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_change_password(GtkWidget *widget, gpointer data)
+{
+    GtkWindow *main_window = GTK_WINDOW(ftc_ui_get_main_window());
+    std::string url;
+
+    if (! main_window || ! widget || ! data) {
+        return;
+    }
+
+    url = "UPDATE_PASSWORD_POP";
+
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window),  url.c_str(), NULL, "비밀번호 변경", 420, 200); 
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_user_logout(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_send_history(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+
+    
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+    ftc_home_page_show_send_history(page);
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_send_clipboard(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_send_url(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    Ftc::Core::EventManager *event_mgr = NULL;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    event_mgr = Ftc::Core::EventManager::getInstance();
+    if (! event_mgr) {
+        return;
+    }
+
+    event_mgr->dispatchEvent(FTC_UI_SEND_URL_REDIRECTION);
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_allow_url(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+    HTTP_PARAM param;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+    http_add_param(param, "is_primary", "");
+
+    
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window), "INIT_PC_URL_INFO_POP", &param, "허용URL 확인", 400, 400);
+}
+
+static void 
+ftc_home_page_on_activate_menu_sub_it_user_history(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+    HTTP_PARAM param;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+    http_add_param(param, "main_page", "SELECT_LOGIN_INFO_LIST");
+    http_add_param(param, "callName", "temp");
+
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window), "COMMON_MAIN", &param, "사용자 이력", 1400, 400); 
+}
+
+static void 
+ftc_home_page_on_activate_menu_sub_it_file_transper_history(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+    HTTP_PARAM param;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+    http_add_param(param, "main_page", "SELECT_USER_REQUEST_LIST");
+    http_add_param(param, "callName", "temp");    
+
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window), "COMMON_MAIN", &param, "파일송수신이력", 1400, 400); 
+}
+
+static void 
+ftc_home_page_on_activate_menu_sub_it_detect_privacy_history(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+}
+
+static void 
+ftc_home_page_on_activate_menu_sub_it_request_change_volume(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window), "INIT_REQUEST_SIZE_POP", NULL, "용량변경신청", 400, 800); 
+}
+
+static void 
+ftc_home_page_on_activate_menu_sub_it_request_list(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+    HTTP_PARAM param;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+    http_add_param(param, "main_page", "SELECT_USER_REQUEST_LIST");
+    http_add_param(param, "callName", "ft_requestList");
+    
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window), "COMMON_MAIN", &param, "요청목록", 400, 800);
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_notice(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+    HTTP_PARAM param;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+    http_add_param(param, "main_page", "SELECT_BOARD_LIST");
+    http_add_param(param, "callName", "temp");
+    
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window), "COMMON_MAIN", &param, "공지사항", 1400, 400);
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_version_info(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    gpointer main_window = NULL;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    main_window = ftc_ui_get_main_window();
+    if (! main_window) {
+        return;
+    }
+
+    ftc_web_kit_show_dialog_post(GTK_WINDOW(main_window), "VERSION_INFO_POP", NULL, "버전정보", 400, 200); 
+}
+
+static void 
+ftc_home_page_on_activate_menu_it_exit_application(GtkWidget *widget, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    Ftc::Core::EventManager *event_mgr = NULL;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    event_mgr = Ftc::Core::EventManager::getInstance();
+    if (! event_mgr) {
+        return;
+    }
+
+    event_mgr->dispatchEvent(FTC_UI_APPLICATION_QUIT, ftc_ui_get_application());
+}
+
 static void
+ftc_home_page_on_button_press_event_box_user_menu(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    GdkEventButton *event_button = NULL;
+
+    if (! FTC_IS_HOME_PAGE(data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    if (! event || ! widget) {
+        return;
+    }
+    event_button = (GdkEventButton*)event;
+    
+    if (event_button->type == GDK_BUTTON_PRESS/*one clicked*/ && event_button->button == 1/*left clicked*/)
+    {
+       
+
+        gtk_menu_popup_at_widget(priv->menu_user, widget, GdkGravity::GDK_GRAVITY_SOUTH, GdkGravity::GDK_GRAVITY_NORTH, NULL);
+
+    }
+}
+
+static void
+ftc_home_page_on_button_press_event_box_toolbar_menu(GtkWidget *widget, GdkEvent *event, gpointer data)
+{
+    FtcHomePage* page = NULL;
+    FtcHomePagePrivate *priv = NULL;
+    GdkEventButton *event_button = NULL;
+
+    if (! FTC_IS_HOME_PAGE (data)) {
+        return;
+    }
+    page = FTC_HOME_PAGE(data);
+
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    if (! event) {
+        return;
+    }
+    event_button = (GdkEventButton*)event;
+
+    ftc_home_page_set_menu_toolbar(page);
+    
+    if (event_button->type == GDK_BUTTON_PRESS/*one clicked*/ && event_button->button == 1/*left clicked*/)
+    {
+        gtk_menu_popup_at_widget(priv->menu_toolbar, GTK_WIDGET(priv->imgbtn_toolbar_menu), GdkGravity::GDK_GRAVITY_SOUTH, GdkGravity::GDK_GRAVITY_NORTH_WEST, NULL);
+    }
+}
+
+static void 
 ftc_home_page_set_recv_request_new_count(FtcHomePage *page)
 {
+    FtcHomePagePrivate *priv = NULL;
+    int new_count = 0;
 
+    if (! FTC_IS_HOME_PAGE(page)) {
+        return;
+    }
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
+
+    if (priv->dnd_subpage) {
+        ftc_home_dnd_sub_page_set_new_recv_request_count(priv->dnd_subpage, new_count);
+    }
+
+    if (priv->header_recv_box) {
+        ftc_home_header_recv_box_set_new_recv_request_count(priv->header_recv_box, new_count);
+    }
 }
 
-
-static void ftc_home_page_on_activate_menu_it_my_file_send_policy(GtkWidget *widget, gpointer data)
+static void
+ftc_home_page_show_send_history(FtcHomePage *page)
 {
+    FtcHomePagePrivate *priv = NULL;
+    Ftc::Core::EventManager *event_mgr = NULL;
+    UpdatePageEventParam update_page_evt_param;
 
-}
+    if (! FTC_IS_HOME_PAGE(page)) {
+        return;
+    }
+    priv = (FtcHomePagePrivate*)ftc_home_page_get_instance_private(page);
+    if (! priv) {
+        return;
+    }
 
-static void ftc_home_page_on_activate_menu_it_change_password(GtkWidget *widget, gpointer data)
-{
+    event_mgr = Ftc::Core::EventManager::getInstance();
+    if (! event_mgr) {
+        return;
+    }
 
-}
+    update_page_evt_param.ftc_object = page;
+    update_page_evt_param.page_name = FTC_VIEW_HOME_SUB_PAGE_SEND_HISTORY;
 
-static void ftc_home_page_on_activate_menu_it_user_logout(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_it_send_history(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_it_send_clipboard(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_it_send_url(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_it_allow_url(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_sub_it_user_history(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_sub_it_file_transper_history(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_sub_it_detect_privacy_history(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_sub_it_request_change_volume(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_sub_it_request_list(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_it_notice(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_it_version_info(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_activate_menu_it_exit_application(GtkWidget *widget, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_button_press_event_box_user_menu(GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-
-}
-
-static void ftc_home_page_on_button_press_event_box_toolbar_menu(GtkWidget *widget, GdkEvent *event, gpointer data)
-{
-    
+    event_mgr->dispatchEvent(FTC_UI_UPDATE_HOME_STACK_EVENT, &update_page_evt_param);
 }
