@@ -11,6 +11,7 @@
 
 
 #include "ftcuicommon.h"
+#include <sstream>
 
 
 bool        
@@ -69,4 +70,101 @@ bool
 ftc_ui_is_use_url_redirection() {
     const Ftc::Core::Properties &properties = Ftc::Core::GlobalVar::getProperties();
     return properties.getUseUrlRedirection();
+}
+
+
+void        
+ftc_ui_get_widget_text_pixel_size (GtkWidget *widget , const char *string , int * wdret , int * htret )
+{
+    PangoFontDescription *font_desc = NULL;
+    GtkStyleContext *style_context = NULL;
+    PangoContext *context = NULL;
+    PangoLayout *layout = NULL;
+
+    if (! widget || ! string || ! wdret || ! htret) {
+        return;
+    }
+
+    style_context = gtk_widget_get_style_context(widget);
+    gtk_style_context_save(style_context);
+    gtk_style_context_set_state(style_context, GTK_STATE_FLAG_NORMAL);
+    gtk_style_context_get(style_context, gtk_style_context_get_state(style_context), "font", &font_desc, NULL);
+
+    context = gtk_widget_get_pango_context ( GTK_WIDGET(ftc_ui_get_main_window()) ) ;
+    
+    layout = pango_layout_new ( context );
+    pango_layout_set_text ( layout, string, -1 );
+    pango_layout_set_font_description ( layout, font_desc );
+    pango_layout_get_pixel_size (layout, wdret , htret );
+    g_object_unref ( layout );
+}
+
+std::string 
+ftc_ui_reduce_text_pixel(GtkWidget *widget, const char *string, int limit_width)
+{
+    std::string str;
+    std::stringstream rv;
+    int wd = 0, ht = 0, dot_wd = 0;
+
+    if (! widget || ! string) {
+        return "";
+    }
+
+    str = string;
+
+    ftc_ui_get_widget_text_pixel_size(widget, str.c_str(), &wd, &ht);
+    if (limit_width >= wd) {
+        rv << string;
+        return rv.str();
+    }
+
+    ftc_ui_get_widget_text_pixel_size(widget, "...", &wd, &ht);
+    dot_wd = wd;
+
+    do {
+        wd = 0, ht = 0;
+
+        str = str.substr(0, str.length() - 1);
+        ftc_ui_get_widget_text_pixel_size(widget, str.c_str(), &wd, &ht);
+
+        if (limit_width > wd + dot_wd) {
+            rv << str;
+            rv << "...";
+            break;
+        }
+    } while (true);
+
+    return rv.str();
+}
+
+
+std::string 
+ftc_ui_get_file_size_format(unsigned int size)
+{
+    char d2s[10] = { 0, };
+    std::string rv = "";
+    double bytes = 0;
+
+    if (size >= 0) {
+        if (size >= 1073741824) {
+            bytes = (double)size / (double)1073741824;
+            sprintf(d2s, "%.2lf", bytes);
+            rv = d2s;
+            rv += " GB";
+        } else if (size >= 1048576) {
+            bytes = (double)size / (double)1048576;
+            sprintf(d2s, "%.2lf", bytes);
+            rv = d2s;
+            rv += " MB";
+        } else if (size >= 1024) {
+            bytes = (double)size / (double)1024;
+            sprintf(d2s, "%.2lf", bytes);
+            rv = d2s;
+            rv += " KB";
+        } else if (size >= 0 && size < 1024) {
+            rv = std::to_string(size) + " Bytes";
+        }
+    }
+
+    return rv;
 }

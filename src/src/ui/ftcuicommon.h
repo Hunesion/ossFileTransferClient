@@ -149,4 +149,9 @@ bool ftc_ui_is_use_clipboard();
 
 bool ftc_ui_is_use_url_redirection();
 
+void        ftc_ui_get_widget_text_pixel_size (GtkWidget *widget , const char *string , int *wdret , int *htret );
+
+std::string ftc_ui_reduce_text_pixel(GtkWidget *widget, const char *string, int limit_width);
+
+std::string ftc_ui_get_file_size_format(unsigned int size);
 #endif /* _FTC_UI_FTC_UI_COMMON_H_ */
