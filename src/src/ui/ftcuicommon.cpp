@@ -37,3 +37,36 @@ ftc_ui_message_box(GtkMessageType type, GtkButtonsType buttons, const char *mess
     return rv;
 }
 
+void
+ftc_ui_fail_show_message_and_quit(const char *message)
+{
+  Ftc::Core::EventManager *event_mgr = NULL;
+
+  if (! message) {
+    return;
+  }
+
+  FTC_LOG("ftc_show_message_and_quit : %s", message);
+
+  ftc_ui_message_box(GtkMessageType::GTK_MESSAGE_ERROR, GtkButtonsType::GTK_BUTTONS_OK, message);
+
+  event_mgr = Ftc::Core::EventManager::getInstance();
+  if (! event_mgr) {
+    return;
+  }
+  
+  event_mgr->dispatchEvent(FTC_UI_APPLICATION_QUIT, ftc_ui_get_application());
+}
+
+
+bool 
+ftc_ui_is_use_clipboard() {
+    const Ftc::Core::Properties &properties = Ftc::Core::GlobalVar::getProperties();
+    return properties.getUseClipboard();
+}
+
+bool 
+ftc_ui_is_use_url_redirection() {
+    const Ftc::Core::Properties &properties = Ftc::Core::GlobalVar::getProperties();
+    return properties.getUseUrlRedirection();
+}

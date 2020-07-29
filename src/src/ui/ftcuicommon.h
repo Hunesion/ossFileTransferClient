@@ -28,6 +28,11 @@
 #define FTC_UI_MAIN_WINDOW_EXTENSION_WIDTH      (FTC_UI_MAIN_WINDOW_WIDTH * 2)
 #define FTC_UI_MAIN_WINDOW_EXTENSION_HEIGHT     FTC_UI_MAIN_WINDOW_HEIGHT
 
+
+static GtkTargetEntry entry_file_drag[] = {
+    { (gchar*)"text/uri-list", GtkTargetFlags::GTK_TARGET_OTHER_WIDGET, 0 }
+};
+
 typedef struct _UpdatePageEventParam
 {
     gpointer ftc_object;
@@ -44,6 +49,65 @@ typedef struct _UpdatePageEventParam
         user_data3 = NULL;
     }
 } UpdatePageEventParam;
+
+typedef struct _SendListEventParam
+{
+    gpointer home_page;
+    std::string file_path;
+
+    _SendListEventParam()
+    {
+        home_page = NULL;
+    }
+} SendListEventParam;
+
+typedef struct _RecvRequestEventParam
+{
+    gpointer ftc_object;
+    void *ftc_request;
+
+    _RecvRequestEventParam()
+    {
+        ftc_object = NULL;
+        ftc_request = NULL;
+    }
+} RecvRequestEventParam;
+
+typedef struct _SendHistoryCountEventParam
+{
+    gpointer ftc_object;
+    int count;
+
+    _SendHistoryCountEventParam()
+    {
+        ftc_object = NULL;
+        count = 0;
+    }
+} SendHistoryCountEventParam, AutoLogoutNotifierParam;
+
+typedef struct _FileDownloadState
+{
+    std::string request_info_file_list_uid;
+    int progress;
+    bool is_downloading;
+
+    _FileDownloadState()
+    {
+        progress = 0;
+        is_downloading = false;
+    }
+} FileDownloadState;
+
+typedef struct _RequestDownloadState
+{
+    std::vector<FileDownloadState> vc_file_down_status;
+    bool is_downloading;
+
+    _RequestDownloadState()
+    {
+        is_downloading = false;
+    }
+} RequestDownloadState;
 
 
 #define FTC_VIEW_WINDOW_PAGE_LOGIN          "login_page"
@@ -74,5 +138,15 @@ gpointer    ftc_ui_get_application();
 bool        ftc_ui_is_internal_location();
 
 GtkResponseType ftc_ui_message_box(GtkMessageType type, GtkButtonsType buttons, const char *message);
+
+void ftc_ui_fail_show_message_and_quit(const char *message);
+
+void ftc_ui_set_extension_window(gpointer main_win, bool is_ext);
+
+bool ftc_ui_is_extension_widnow();
+
+bool ftc_ui_is_use_clipboard();
+
+bool ftc_ui_is_use_url_redirection();
 
 #endif /* _FTC_UI_FTC_UI_COMMON_H_ */
