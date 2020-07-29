@@ -1,6 +1,5 @@
 #ifndef _FTC_REQUEST_H_
 #define _FTC_REQUEST_H_
-#include <json-glib/json-glib.h>
 #include <memory>
 #include <list>
 #include <map>
