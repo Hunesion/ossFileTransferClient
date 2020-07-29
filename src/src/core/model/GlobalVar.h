@@ -17,6 +17,7 @@
 #include "ClientConfig.h"
 #include "ValueObject.h"
 #include "User.h"
+#include "Properties.h"
 
 
 BEGIN_FTC_CORE
@@ -28,6 +29,7 @@ namespace GlobalVar
     ClientConfig &getClientConfig(); 
     const LoginLocation& getLoginLocation();  
     const User& getUser(); 
+    const Properties& getProperties(); 
 
     void dispose();
 } // namespace GlobalVar

@@ -19,6 +19,7 @@ BEGIN_FTC_CORE
 static ClientConfig s_ClientConfig ; 
 static LoginLocation s_LoginLocation ; 
 static User s_User ; 
+static Properties s_Properties ;
 
 namespace GlobalVar
 {
@@ -40,6 +41,10 @@ namespace GlobalVar
 
     const User& getUser(){
         return s_User; 
+    }
+
+    const Properties& getProperties(){
+        return s_Properties;
     }
 
     void dispose() {
