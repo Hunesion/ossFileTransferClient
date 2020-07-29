@@ -26,26 +26,26 @@ namespace StringUtils
 
 void ltrim(std::string &s)
 {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
-        return !std::isspace(ch);
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](char ch) {
+        return !std::isspace(static_cast<unsigned char>(ch));
     }));
 }
 void ltrim(std::string &s, char remove)
 {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [remove](int ch) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [remove](char ch) {
         return ch != remove;
     }));
 }
 
 void rtrim(std::string &s)
 {
-    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
-        return !std::isspace(ch);
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](char ch) {
+        return !std::isspace(static_cast<unsigned char>(ch));
     }).base(), s.end());
 }
 void rtrim(std::string &s, char remove)
 {
-    s.erase(std::find_if(s.rbegin(), s.rend(), [remove](int ch) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [remove](char ch) {
         return ch != remove;
     }).base(), s.end());
 }
