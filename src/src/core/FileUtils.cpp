@@ -263,6 +263,7 @@ namespace FileUtils
             filename = filename.substr(0, filename.length() - extension.length());
         }
         
+        
         do {
             indexFilename = filename;
             indexFilename.append("(");

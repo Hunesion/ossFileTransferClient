@@ -13,6 +13,8 @@
 #define _FTC_CORE_CORE_H_
 
 
+#include "model/User.h"
+#include "model/Properties.h"
 #include "model/GlobalVar.h"
 #include "Event.h"
 #include "EventManager.h"
@@ -25,6 +27,7 @@
 #include "Logger.h"
 #include "SocketServer.h"
 #include "Request.h"
+#include "macro.h"
 
 bool ftc_core_init(); 
 void ftc_core_dispose(); 
