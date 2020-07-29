@@ -16,6 +16,7 @@
 #include "model/User.h"
 #include "model/Properties.h"
 #include "model/GlobalVar.h"
+#include "model/GlobalStruct.h"
 #include "Event.h"
 #include "EventManager.h"
 #include "Response.h"

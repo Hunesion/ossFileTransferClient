@@ -21,6 +21,7 @@ add_library(hune_core
             model/GlobalVar.cpp
             model/User.cpp
             model/Properties.cpp
+            model/GlobalStruct.cpp
             )
 
 IF (CMAKE_BUILD_TYPE MATCHES Debug)
