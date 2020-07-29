@@ -24,6 +24,12 @@ BEGIN_FTC_CORE
 namespace StringUtils
 {
 
+void ltrim(std::string &s)
+{
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+        return !std::isspace(ch);
+    }));
+}
 void ltrim(std::string &s, char remove)
 {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [remove](int ch) {
@@ -31,6 +37,12 @@ void ltrim(std::string &s, char remove)
     }));
 }
 
+void rtrim(std::string &s)
+{
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+}
 void rtrim(std::string &s, char remove)
 {
     s.erase(std::find_if(s.rbegin(), s.rend(), [remove](int ch) {
@@ -38,6 +50,11 @@ void rtrim(std::string &s, char remove)
     }).base(), s.end());
 }
 
+void trim(std::string &s)
+{
+    ltrim(s);
+    rtrim(s);
+}
 void trim(std::string &s, char remove)
 {
     ltrim(s, remove);
