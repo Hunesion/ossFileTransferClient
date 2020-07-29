@@ -24,24 +24,24 @@ BEGIN_FTC_CORE
 namespace StringUtils
 {
 
-void ltrim(std::string &s)
+void ltrim(std::string &s, char remove)
 {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(),
-                                    std::not1(std::ptr_fun<int, int>(std::isspace))));
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [remove](int ch) {
+        return ch != remove;
+    }));
 }
 
-void rtrim(std::string &s)
+void rtrim(std::string &s, char remove)
 {
-    s.erase(std::find_if(s.rbegin(), s.rend(),
-                         std::not1(std::ptr_fun<int, int>(std::isspace)))
-                .base(),
-            s.end());
+    s.erase(std::find_if(s.rbegin(), s.rend(), [remove](int ch) {
+        return ch != remove;
+    }).base(), s.end());
 }
 
-void trim(std::string &s)
+void trim(std::string &s, char remove)
 {
-    ltrim(s);
-    rtrim(s);
+    ltrim(s, remove);
+    rtrim(s, remove);
 }
 int getInt(const std::string &s)
 {
