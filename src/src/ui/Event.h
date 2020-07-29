@@ -10,4 +10,20 @@
 
 #define FTC_UI_APPLICATION_QUIT                 "Ftc::Ui::AppicationQuit"
 
+#define FTC_UI_SEND_LIST_ADD_FILE               "Ftc::Ui::SendListAddFile"
+
+#define FTC_UI_SEND_HISTORY_REFRESH             "Ftc::Ui::SendHistoryRefresh"
+
+#define FTC_UI_SHOW_LAST_RECV_REQUEST           "Ftc::Ui::ShowLastRecvRequest"
+
+#define FTC_UI_RECV_DOWNLOAD_ALL                "Ftc::Ui::RecvDownloadAll"
+
+#define FTC_UI_RECV_REQUEST_NEW_COUNT           "Ftc::Ui::RecvRequestNewCount"
+
+#define FTC_UI_SEND_HISTORY_NEW_COUNT           "Ftc::Ui::SendHistoryNewCount"
+
+#define FTC_UI_SELECT_CLIPBOARD_TARGET          "Ftc::Ui::SelectClipboardTarget"
+
+#define FTC_UI_SEND_URL_REDIRECTION             "Ftc::Ui::SendUrlRedirection"
+
 #endif /* _FTC_UI_EVENT_H_ */
