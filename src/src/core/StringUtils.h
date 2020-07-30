@@ -18,9 +18,12 @@
 #include "macro.h"
 BEGIN_FTC_CORE
 namespace StringUtils {
-    void ltrim(std::string &s); 
-    void rtrim(std::string &s); 
-    void trim(std::string &s); 
+    void ltrim(std::string &s);
+    void ltrim(std::string &s, char remove);
+    void rtrim(std::string &s);
+    void rtrim(std::string &s, char remove);
+    void trim(std::string &s);
+    void trim(std::string &s, char remove);
     int getInt(const std::string &s); 
     int getInt(const char* s); 
     bool getBool(const std::string &s); 
