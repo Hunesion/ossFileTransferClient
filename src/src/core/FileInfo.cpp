@@ -12,6 +12,7 @@
 #include <string.h>
 
 #include "FileInfo.h"
+#include "StringUtils.h"
 
 
 #define PATH_SEPERATOR '/'
@@ -35,8 +36,10 @@ _exist(false){
 
     site = this->_fullPath.size() - 1;
     if (this->_fullPath.size() > 1 && this->_fullPath.at(site) == PATH_SEPERATOR){
-        while (_fullPath.at(--site) == PATH_SEPERATOR && site > 0);
-        this->_fullPath = this->_fullPath.substr(0, site + 1); 
+        StringUtils::rtrim(this->_fullPath, PATH_SEPERATOR);
+
+        // if _fullPath = "//////" => _fullPath = "/"
+        if (this->_fullPath.empty()) this->_fullPath = PATH_SEPERATOR;
     }
 
     
@@ -69,13 +72,10 @@ void FileInfo::seperatePath(){
 
     pos = this->_fullPath.find_last_of(PATH_SEPERATOR)    ; 
     if (pos == std::string::npos){
-        if ( this->_fullPath.size() == 0)
-            return ;
-        else {      // ex) _fullPath='file.ext' => dir: '.' , file: 'file.ext'
-            this->_path = ".";
-            this->_fileName = this->_fullPath;
-            return ;
-        } 
+        // ex) _fullPath='file.ext' => dir: '.' , file: 'file.ext'
+        this->_path = ".";
+        this->_fileName = this->_fullPath;
+        return ; 
     }
 
     this->_path = this->_fullPath.substr(0, pos); 
