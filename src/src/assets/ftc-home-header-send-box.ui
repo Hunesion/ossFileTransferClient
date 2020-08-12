@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <template class="FtcHomeHeaderSendBox" parent="GtkBox">
+    <property name="hexpand">False</property>
+    <property name="vexpand">False</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkLabel" id="lbl_send">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="margin_left">189</property>
+        <property name="label" translatable="yes">보내기</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEventBox" id="event_box_copy_cert">
+        <property name="visible">False</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkImage" id="imgbtn_copy_cert">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="stock">gtk-missing-image</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEventBox" id="event_box_send_url">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkImage" id="imgbtn_send_url">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="stock">gtk-missing-image</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkEventBox" id="event_box_send_clipboard">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkImage" id="imgbtn_send_clipboard">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>            
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="stock">gtk-missing-image</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">3</property>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+  </template>
+</interface>
