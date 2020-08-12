@@ -154,4 +154,8 @@ void        ftc_ui_get_widget_text_pixel_size (GtkWidget *widget , const char *s
 std::string ftc_ui_reduce_text_pixel(GtkWidget *widget, const char *string, int limit_width);
 
 std::string ftc_ui_get_file_size_format(unsigned int size);
+
+bool ftc_ui_is_expired_date_request_info(const std::string &expired_date/*YYYYMMDD*/);
+
+
 #endif /* _FTC_UI_FTC_UI_COMMON_H_ */

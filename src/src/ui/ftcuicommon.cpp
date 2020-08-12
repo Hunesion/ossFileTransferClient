@@ -168,3 +168,30 @@ ftc_ui_get_file_size_format(unsigned int size)
 
     return rv;
 }
+
+bool 
+ftc_ui_is_expired_date_request_info(const std::string &expired_date/*YYYYMMDD*/)
+{
+    std::time_t now_date = std::time(NULL), tmp_date, calc_date;
+    std::tm now_tm, tmp_tm;
+    int seconds = 0;
+    bool rv = false;
+
+    localtime_r(&now_date, &now_tm);
+
+    tmp_tm.tm_year = atoi(expired_date.substr(0, 4).c_str()) - 1900;
+    tmp_tm.tm_mon = atoi(expired_date.substr(4, 2).c_str()) - 1;
+    tmp_tm.tm_mday = atoi(expired_date.substr(6, 2).c_str());
+    //  시간 계산 시 초단위 까지 계산함으로 유효 날짜(일 단위)로 표기하기 위해 현재 시분초를 넣어준다.
+    tmp_tm.tm_hour = now_tm.tm_hour;
+    tmp_tm.tm_min = now_tm.tm_min;
+    tmp_tm.tm_sec = now_tm.tm_sec;
+
+    tmp_date = std::mktime(&tmp_tm);
+    seconds = std::difftime(tmp_date, now_date);
+    if (seconds <= 0) {
+        rv = true;
+    }
+
+    return rv;
+}
