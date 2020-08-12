@@ -4,6 +4,13 @@ set(RESOURCE_LIST
 app-tray-menu.ui
 ftc-main-window.ui
 ftc-login-page.ui
+ftc-home-page.ui
+ftc-home-dnd-sub-page.ui
+ftc-home-header-recv-box.ui
+ftc-home-header-send-box.ui
+ftc-home-header-send-history-box.ui
+ftc-home-recv-list-row.ui
+ftc-home-recv-list-sub-page.ui
 style.css
 ADD-ICON-16PX.png
 APPROVAL-ICON-16PX.png
