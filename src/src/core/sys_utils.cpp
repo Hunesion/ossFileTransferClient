@@ -98,20 +98,6 @@ bool ftc_is_main_thread()
 }
 
 int
-ftc_open_uri(const std::string &param)
-{
-    GError *error  = NULL;
-
-    if (g_app_info_launch_default_for_uri(param.c_str(), NULL, &error)) {
-        return 0;
-    }
-
-    FTC_LOG("OPEN URI FAIL : %s", param.c_str());
-    g_error_free(error);
-
-    return 1;
-}
-int
 ftc_run_xdg_open(const std::string &param)
 {
     int rv = 0;
@@ -126,4 +112,42 @@ ftc_run_xdg_open(const std::string &param)
     } 
 
     return rv;
+}
+
+
+int
+ftc_open_default_uri(const std::string &param)
+{
+    GError *error  = NULL;
+
+    if (g_app_info_launch_default_for_uri(param.c_str(), NULL, &error)) {
+        return 0;
+    }
+
+    FTC_LOG("OPEN URI FAIL : %s", param.c_str());
+    g_error_free(error);
+
+    return 1;
+}
+
+int  
+ftc_open_url(const std::string &url)
+{
+    std::string param = url;
+    if ((param.find("http://") == std::string::npos) && (param.find("https://") == std::string::npos)) {
+        param = param.insert(0, "http://");
+    }
+
+    return ftc_open_default_uri(param);
+}
+
+int  
+ftc_open_directory(const std::string &dir)
+{
+    std::string param = dir;
+    if (param.find("file://") == std::string::npos) {
+        param = param.insert(0, "file://");
+    }
+
+    return ftc_open_default_uri(param);
 }
