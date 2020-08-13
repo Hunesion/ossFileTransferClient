@@ -58,6 +58,21 @@ protected :
 private :  
 }; 
 
+class LeftMenuCount : public BaseValue{
+public : 
+    LeftMenuCount(); 
+    virtual ~LeftMenuCount(); 
+
+    bool update(int day = 30);
+protected :
+    virtual bool parseJsonNode(JsonNode *node) override ; 
+    virtual bool internalClear() override ; 
+    
+    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(int, _receiveCnt, ReceiveCnt);
+    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(int, _sendCnt, SendCnt);
+}; 
+
+
 
 END_FTC_CORE
 #endif /* _FTC_CORE_MODEL_VALUE_OBJECT_H_ */

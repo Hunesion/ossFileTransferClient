@@ -106,4 +106,43 @@ bool LoginLocation::internalClear()  {
 /**
  * End Login Location 
  **/ 
+
+
+/**
+ * Begin LeftMenuCount
+ **/
+LeftMenuCount::LeftMenuCount():BaseValue(){
+
+}
+
+LeftMenuCount::~LeftMenuCount(){
+    this->clear(); 
+}
+
+bool LeftMenuCount::parseJsonNode(JsonNode *node) {
+    bool rv = false ; 
+    JsonObject *obj = nullptr ; 
+    JsonArray *arr = nullptr;
+    int length = 0;
+    const char *str = nullptr ; 
+    obj = JsonUtils::getObject(node); 
+    if (!obj) return rv ; 
+
+    if (JsonUtils::getStdString(obj, "result") != "success") {
+        return rv;
+    }
+
+    this->_receiveCnt = JsonUtils::getInt(obj, "receiveCnt", -1);
+    this->_sendCnt = JsonUtils::getInt(obj, "sendCnt", -1);
+
+    rv = true ; 
+    return rv ; 
+}
+
+bool LeftMenuCount::internalClear() {
+    this->_receiveCnt = -1;
+    this->_sendCnt = -1;
+
+}
+
 END_FTC_CORE
