@@ -13,6 +13,9 @@
 #include "ftcmainwindow.h"
 #include "ftcloginpage.h"
 #include "ftchomepage.h"
+#include "ftcdetailrecvpage.h"
+// #include "ftcdetailsendpage.h"
+// #include "ftcdetailsendhistorypage.h"
 
 #include <mutex>
 #include <sstream>
@@ -33,6 +36,9 @@ struct _FtcMainWindowPrivate
 
   FtcLoginPage  *login_page;
   FtcHomePage   *home_page;
+  FtcDetailRecvPage *detail_recv_page;
+  // FtcDetailSendPage *detail_send_page;
+  // FtcDetailSendHistoryPage *detail_send_history_page;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(FtcMainWindow, ftc_main_window, GTK_TYPE_APPLICATION_WINDOW);
@@ -230,4 +236,125 @@ ftc_main_window_post_login_process(FtcMainWindow *main_window)
   gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_main), FTC_VIEW_WINDOW_PAGE_HOME);
 
   ftc_login_page_set_login_state(priv->login_page, true);
+}
+
+
+void 
+ftc_main_window_set_detail_send_page(FtcMainWindow *main_window, gpointer page)
+{
+  FtcMainWindowPrivate *priv = NULL;
+  
+  if (! FTC_IS_MAIN_WINDOW(main_window)) {
+    return;
+  }
+
+  priv = (FtcMainWindowPrivate*)ftc_main_window_get_instance_private(main_window);
+  if (! priv) {
+    return;
+  }
+
+  // if (! FTC_IS_DETAIL_SEND_PAGE(page)) {
+  //   FTC_LOG("ftc_main_window_set_detail_send_page invalid FtcDetailSendPage!!");
+  //   return;  
+  // }
+
+  // priv->detail_send_page = FTC_DETAIL_SEND_PAGE(page);
+  // gtk_stack_add_named(GTK_STACK(priv->stack_extension), GTK_WIDGET(priv->detail_send_page), FTC_VIEW_WINDOW_PAGE_SEND_DETAIL);
+}
+
+
+void
+ftc_main_window_set_detail_recv_page(FtcMainWindow *main_window, gpointer page)
+{
+  FtcMainWindowPrivate *priv = NULL;
+  
+  if (! FTC_IS_MAIN_WINDOW(main_window)) {
+    return;
+  }
+
+  priv = (FtcMainWindowPrivate*)ftc_main_window_get_instance_private(main_window);
+  if (! priv) {
+    return;
+  }
+
+  if (! FTC_IS_DETAIL_RECV_PAGE(page)) {
+    FTC_LOG("ftc_main_window_set_detail_recv_page invalid FtcDetailRecvPage!!");
+    return;
+  }
+
+  priv->detail_recv_page = FTC_DETAIL_RECV_PAGE(page);
+  gtk_stack_add_named(GTK_STACK(priv->stack_extension), GTK_WIDGET(priv->detail_recv_page), FTC_VIEW_WINDOW_PAGE_RECV_DETAIL);
+}
+
+void                
+ftc_main_window_set_detail_send_history_page(FtcMainWindow *main_window, gpointer page)
+{
+  FtcMainWindowPrivate *priv = NULL;
+  
+  if (! FTC_IS_MAIN_WINDOW(main_window)) {
+    return;
+  }
+
+  priv = (FtcMainWindowPrivate*)ftc_main_window_get_instance_private(main_window);
+  if (! priv) {
+    return;
+  }
+  // if (! FTC_IS_DETAIL_SEND_HISTORY_PAGE(page)) {
+  //   FTC_LOG("ftc_main_window_set_detail_send_history_page invalid FtcDetailSendHistoryPage!!");
+  //   return;  
+  // }
+
+  // priv->detail_send_history_page = FTC_DETAIL_SEND_HISTORY_PAGE(page);
+  // gtk_stack_add_named(GTK_STACK(priv->stack_extension), GTK_WIDGET(priv->detail_send_history_page), FTC_VIEW_WINDOW_PAGE_SEND_HISTORY_DETAIL);
+}
+
+gpointer            
+ftc_main_window_get_detail_send_page(FtcMainWindow *main_window)
+{
+  FtcMainWindowPrivate *priv = NULL;
+
+  if (!FTC_IS_MAIN_WINDOW(main_window)) {
+    return NULL;
+  }
+
+  priv = (FtcMainWindowPrivate*)ftc_main_window_get_instance_private(main_window);
+  if (!priv) {
+    return NULL;
+  }
+
+  //return priv->detail_send_page;
+}
+
+gpointer            
+ftc_main_window_get_detail_recv_page(FtcMainWindow *main_window)
+{
+  FtcMainWindowPrivate *priv = NULL;
+
+  if (! FTC_IS_MAIN_WINDOW(main_window)) {
+    return NULL;
+  }
+
+  priv = (FtcMainWindowPrivate*)ftc_main_window_get_instance_private(main_window);
+  if (!priv) {
+    return NULL;
+  }
+
+  return priv->detail_recv_page;
+}
+
+gpointer            
+ftc_main_window_get_detail_send_history_page(FtcMainWindow *main_window)
+{
+  FtcMainWindowPrivate *priv = NULL;
+
+  if (!FTC_IS_MAIN_WINDOW(main_window)) {
+    return NULL;
+  }
+
+  priv = (FtcMainWindowPrivate*)ftc_main_window_get_instance_private(main_window);
+  if (!priv) {
+    return NULL;
+  }
+
+  //return priv->detail_send_history_page;
 }
