@@ -2,6 +2,7 @@
 #include "ftchomeheadersendbox.h"
 #include "ftchomedndsubpage.h"
 #include "ftchomeheaderrecvbox.h"
+#include "ftchomerecvlistsubpage.h"
 #include "ftchomeheadersendhistorybox.h"
 #include "ftcmainwindow.h"
 #include "../core/TimeUtils.h"
@@ -34,6 +35,7 @@ struct _FtcHomePagePrivate
     FtcHomeHeaderSendHistoryBox *header_send_history_box;
 
     FtcHomeDndSubPage *dnd_subpage;
+    FtcHomeRecvListSubPage *recv_list_subpage;
 
     //  유저 메뉴
     GtkMenu     *menu_user;
@@ -138,6 +140,8 @@ static void ftc_home_page_on_button_press_event_box_toolbar_menu(GtkWidget *widg
 static void ftc_home_page_set_recv_request_new_count(FtcHomePage *page);
 
 static void ftc_home_page_show_send_history(FtcHomePage *page);
+
+static void ftc_home_page_send_clipboard(FtcHomePage *page);
 ///////////////////////////////////////////////////////////////////
 
 static void
@@ -210,6 +214,27 @@ ftc_home_page_init (FtcHomePage *page)
     //  stack_send_info 에 기본 drag and drop & recv 화면 설정
     priv->dnd_subpage = ftc_home_dnd_sub_page_new(page);
     gtk_stack_add_named(priv->stack_list_send_recv, GTK_WIDGET(priv->dnd_subpage), FTC_VIEW_HOME_SUB_PAGE_DND);
+
+    //  Recv Header 설정 -> RecvList페이지에서 header_recv_box로 데이터를 전달해야 함
+    priv->header_recv_box = ftc_home_header_recv_box_new(page, FTC_VIEW_HOME_SUB_PAGE_DND);
+    gtk_stack_add_named(priv->stack_header_send_recv, GTK_WIDGET(priv->header_recv_box), FTC_VIEW_HOME_HEADER_RECV);
+
+    //  Send Header 설정
+    priv->header_send_box = ftc_home_header_send_box_new(page);
+    gtk_stack_add_named(priv->stack_header_send_recv, GTK_WIDGET(priv->header_send_box), FTC_VIEW_HOME_HEADER_SEND);
+
+    //  Send Header 보여준다.
+    gtk_stack_set_visible_child_name(priv->stack_header_send_recv, FTC_VIEW_HOME_HEADER_SEND);
+
+    priv->header_send_history_box = ftc_home_header_send_history_box_new(page);
+    gtk_stack_add_named(priv->stack_header_send_recv, GTK_WIDGET(priv->header_send_history_box), FTC_VIEW_HOME_HEADER_SEND_HISTORY);
+
+    //  Recv List 생성 및 화면 Stack에 추가
+    //  Recv List 받아서 마지막으로 받은 요청을 dnd page에 전달
+    priv->recv_list_subpage = ftc_home_recv_list_sub_page_new(page);
+    gtk_stack_add_named(priv->stack_list_send_recv, GTK_WIDGET(priv->recv_list_subpage), FTC_VIEW_HOME_SUB_PAGE_RECV_LIST);
+    //  신규받기건수를 받아온다. (recv_list_subpage의 마지막 요청 건에서 최초 전달이 불가능하다.)
+    ftc_home_recv_list_sub_page_get_receive_list(priv->recv_list_subpage);
 
     //  DND 페이지를 보여준다.
     gtk_stack_set_visible_child_name(priv->stack_list_send_recv, FTC_VIEW_HOME_SUB_PAGE_DND);
@@ -450,12 +475,24 @@ ftc_home_page_update_sub_page_event(Ftc::Core::Event *evt)
             if (ftc_ui_is_extension_widnow() == true) {
                 ftc_ui_set_extension_window(ftc_ui_get_main_window(), false);
             }
+            if (FTC_IS_HOME_RECV_LIST_SUB_PAGE(priv->recv_list_subpage)) {
+                ftc_home_recv_list_sub_page_get_receive_list(priv->recv_list_subpage);
+            }
             gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_DND);
         }
     } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_SEND_LIST) {
         
     } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_RECV_LIST) {    
-        
+        //  세션이 만료된 상태(모든 페이지가 Destroy)로 받기 페이지로 이동 시 GTK STACK CRITICAL 오류 발생
+        if (GTK_IS_STACK(priv->stack_list_send_recv) && FTC_IS_HOME_RECV_LIST_SUB_PAGE(priv->recv_list_subpage)) {  
+            if ((strcmp(child_name, FTC_VIEW_HOME_HEADER_RECV) != 0) && GTK_IS_STACK(priv->stack_header_send_recv)) {
+                gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_header_send_recv), FTC_VIEW_HOME_HEADER_RECV);
+            }
+
+            ftc_home_recv_list_sub_page_get_receive_list(priv->recv_list_subpage);
+            ftc_home_recv_list_sub_page_list_box_unselect_all(priv->recv_list_subpage);  
+            gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_RECV_LIST);
+        }
     } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_SEND_HISTORY) {
         
     }
@@ -501,6 +538,11 @@ ftc_home_page_recv_list_refresh(FtcHomePage *page)
         return;
     }
 
+    if (! priv->recv_list_subpage) {
+        return;
+    }
+
+    ftc_home_recv_list_sub_page_get_receive_list(priv->recv_list_subpage);
 }
 
 static void 
@@ -644,6 +686,9 @@ ftc_home_page_recv_download_all_event(Ftc::Core::Event *evt)
     if (strcmp(child_name, FTC_VIEW_HOME_HEADER_RECV) != 0) {
         gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_header_send_recv), FTC_VIEW_HOME_HEADER_RECV);
     }
+    ftc_home_recv_list_sub_page_list_box_unselect_all(priv->recv_list_subpage);
+    gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_RECV_LIST);
+    ftc_home_recv_list_sub_page_list_box_select_row_and_batch_download(priv->recv_list_subpage, (Ftc::Core::GlobalStruct::FtcRequest*)param->ftc_request);
 }
 
 static void 
@@ -1004,6 +1049,7 @@ ftc_home_page_on_activate_menu_it_exit_application(GtkWidget *widget, gpointer d
     event_mgr->dispatchEvent(FTC_UI_APPLICATION_QUIT, ftc_ui_get_application());
 }
 
+
 static void
 ftc_home_page_on_button_press_event_box_user_menu(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
@@ -1078,6 +1124,12 @@ ftc_home_page_set_recv_request_new_count(FtcHomePage *page)
     if (! priv) {
         return;
     }
+
+    if (! priv->recv_list_subpage) {
+        return;
+    }
+
+    new_count = ftc_home_recv_list_sub_page_get_recv_request_new_count(priv->recv_list_subpage);
 
     if (priv->dnd_subpage) {
         ftc_home_dnd_sub_page_set_new_recv_request_count(priv->dnd_subpage, new_count);
