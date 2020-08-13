@@ -157,5 +157,8 @@ std::string ftc_ui_get_file_size_format(unsigned int size);
 
 bool ftc_ui_is_expired_date_request_info(const std::string &expired_date/*YYYYMMDD*/);
 
+GdkPixbuf*  ftc_ui_get_icon_pixbuf(const char *filename, int size);
+
+std::string ftc_ui_get_approval_state_text(const std::string &approval_state, const std::string &approval_type, const std::string &last_approval_type);
 
 #endif /* _FTC_UI_FTC_UI_COMMON_H_ */

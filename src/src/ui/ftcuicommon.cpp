@@ -195,3 +195,57 @@ ftc_ui_is_expired_date_request_info(const std::string &expired_date/*YYYYMMDD*/)
 
     return rv;
 }
+
+GdkPixbuf*  ftc_ui_get_icon_pixbuf(const char *filename, int size) {
+    GdkPixbuf *rv = NULL;
+    GIcon *gicon = NULL;
+    GtkIconTheme *icon_theme = NULL;
+    GtkIconInfo *icon_info = NULL;
+    const char *mime_type = NULL;
+
+    //  아이콘 이미지
+    mime_type = g_content_type_guess(filename, NULL, 0, FALSE);
+    if (! mime_type) {
+        goto END;
+    }
+    gicon = g_content_type_get_icon(mime_type);
+    if (! gicon) {
+        goto END;
+    }
+    
+    icon_theme = gtk_icon_theme_get_default();
+    if (! icon_theme) {
+        goto END;
+    }
+    icon_info = gtk_icon_theme_lookup_by_gicon(icon_theme, gicon, size, GtkIconLookupFlags::GTK_ICON_LOOKUP_FORCE_SIZE);
+    if (! icon_info) {
+        goto END;
+    }
+
+    rv = gtk_icon_info_load_icon(icon_info, NULL);
+    
+END:
+    if (mime_type) {
+        g_free((gpointer)mime_type);
+        mime_type = NULL;
+    }
+
+    if (gicon) {
+        g_object_unref(gicon);
+        gicon = NULL;
+    }
+
+    if (icon_info) {
+        g_object_unref(icon_info);
+        icon_info = NULL;
+    }
+
+    return rv;
+}
+
+
+std::string
+ftc_ui_get_approval_state_text(const std::string &approval_state, const std::string &approval_type, const std::string &last_approval_type)
+{
+
+}
