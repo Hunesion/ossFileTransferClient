@@ -16,5 +16,6 @@
 #define FTC_CORE_LOGIN_EVENT "Ftc::Core::Login"
 #define FTC_CORE_LOGIN_LOCATION_EVENT "Ftc::Core::LoginLocation"
 #define FTC_CORE_RECV_LIST_REFRESH        "Ftc::Core::RecvListRefresh"
+#define FTC_CORE_DOWNLOAD_RECV_RESULT_EVENT    "Ftc::Core::DownloadRecvResult"
 
 #endif /* _FTC_CORE_EVENT_H_ */
