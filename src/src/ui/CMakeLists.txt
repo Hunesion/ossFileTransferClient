@@ -13,6 +13,11 @@ add_library(hune_ui
             ftchomeheadersendhistorybox.cpp
             ftchomedndsubpage.cpp
             ftchomerecvlistsubpage.cpp
+            ftchomerecvlistrow.cpp
+            ftcdetailrecvpage.cpp
+            ftcdetailrecvrequestinfosubpage.cpp
+            ftcdetailrecvfilelistsubpage.cpp
+            ftcdetailrecvfilelistrow.cpp
             ../dbus/playback.c
             ../webkit/ftcwebkit.cpp
             ../webkit/ftcdbusserver.cpp
