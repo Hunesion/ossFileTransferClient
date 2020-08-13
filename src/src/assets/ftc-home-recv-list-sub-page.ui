@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <template class="FtcHomeRecvListSubPage" parent="GtkBox">
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkScrolledWindow" id="scrolled_window">
+          <property name="visible">True</property>
+          <property name="can_focus">False</property>
+          <property name="margin_left">10</property>
+          <property name="margin_right">10</property>
+          <property name="margin_bottom">10</property>
+          <child>
+            <object class="GtkListBox" id="listbox_recv">
+              <property name="visible">True</property>
+              <property name="can_focus">False</property>'
+            </object>
+          </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+  </template>
+</interface>
