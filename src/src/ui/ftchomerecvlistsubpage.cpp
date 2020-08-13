@@ -1,6 +1,6 @@
 #include "ftchomerecvlistsubpage.h"
 #include "ftchomerecvlistrow.h"
-//#include "ftcdetailrecvpage.h"
+#include "ftcdetailrecvpage.h"
 #include "ftcmainwindow.h"
 #include "../core/TimeUtils.h"
 #include <mutex>
@@ -255,26 +255,7 @@ ftc_home_recv_list_sub_page_request_receive_list(FtcHomeRecvListSubPage *page, i
                     Ftc::Core::TimeUtils::getDateFormat(from_date_tm, "%Y%02m%02d").c_str(),
                     Ftc::Core::TimeUtils::getDateFormat(to_date_tm, "%Y%02m%02d").c_str());
 
-    if (! resp->isSuccess()) {
-        return rv;
-    }
-
-    node = resp->getJsonNode();
-
-    if (! node) {
-        return rv;
-    }
-
-    list = Ftc::Core::JsonUtils::getArray(node, "list");
-    if (! list) {
-        return rv;
-    }
-
-    list_count = json_array_get_length(list);
-    if (list_count == 0) {
-        return rv;
-    }
-
+    
     for (int i = 0 ; i < list_count; i++) {
         ftc_home_recv_list_sub_page_list_box_add(page, json_array_get_object_element(list, i));
     }
@@ -298,9 +279,6 @@ ftc_home_recv_list_sub_page_get_receive_list(FtcHomeRecvListSubPage *page)
     if (! priv) {
         return;
     }
-
-    // GtkAdjustment *adj = gtk_scrolled_window_get_vadjustment(priv->scrolled_window);
-    // gtk_adjustment_set_value(adj, 0);
 
     priv->page_count = 1;
     ftc_home_recv_list_sub_page_list_box_clear(page);
@@ -372,27 +350,6 @@ ftc_home_recv_list_sub_page_list_box_add(FtcHomeRecvListSubPage *page, JsonObjec
     priv = (FtcHomeRecvListSubPagePrivate*)ftc_home_recv_list_sub_page_get_instance_private(page);
 
     Ftc::Core::GlobalStruct::FtcRequest *ftc_request = new Ftc::Core::GlobalStruct::FtcRequest();
-    ftc_request->request_info_uid = Ftc::Core::JsonUtils::getStdString(obj, "request_info_uid");
-    ftc_request->request_title = Ftc::Core::JsonUtils::getStdString(obj, "request_title");
-    ftc_request->request_user_name = Ftc::Core::JsonUtils::getStdString(obj, "request_user_name");
-    ftc_request->request_user_id = Ftc::Core::JsonUtils::getStdString(obj, "request_user_id");
-    ftc_request->request_dt = Ftc::Core::JsonUtils::getStdString(obj, "request_dt");
-    ftc_request->firstFileName = Ftc::Core::JsonUtils::getStdString(obj, "firstFileName");
-    ftc_request->from_network_id = Ftc::Core::JsonUtils::getStdString(obj, "from_network_id");
-    ftc_request->to_network_id = Ftc::Core::JsonUtils::getStdString(obj, "to_network_id");
-    ftc_request->download_expire_dt = Ftc::Core::JsonUtils::getStdString(obj, "download_expire_dt");
-    tmp = Ftc::Core::JsonUtils::getString(obj, "file_cnt");
-    if (tmp) {
-        ftc_request->file_cnt = atoi(tmp);
-        tmp = NULL;
-    }
-    ftc_request->totalFileSize = Ftc::Core::JsonUtils::getInt(obj, "totalFileSize");
-    tmp = Ftc::Core::JsonUtils::getString(obj, "is_read");
-    if (tmp) {
-        ftc_request->is_read = (strcasecmp(tmp, "Y") == 0) ? true : false;
-        tmp = NULL;
-    }
- 
     list_row = ftc_home_recv_list_row_new(page, ftc_request);
     gtk_list_box_insert(priv->listbox_recv, GTK_WIDGET(list_row), -1);
 }
@@ -503,7 +460,6 @@ ftc_home_recv_list_sub_page_list_box_select_row_and_batch_download(FtcHomeRecvLi
         return;
     }
 
-    //gtk_list_box_select_row(priv->listbox_recv, list_box_row);
     ftc_home_recv_list_sub_page_select_list_row(page, list_row, ftc_request, request_down_state);
 
     ftc_detail_recv_page_file_download_all(priv->detail_recv_page);
