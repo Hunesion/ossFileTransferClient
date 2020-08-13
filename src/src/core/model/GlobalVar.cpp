@@ -20,6 +20,7 @@ static ClientConfig s_ClientConfig ;
 static LoginLocation s_LoginLocation ; 
 static User s_User ; 
 static Properties s_Properties ;
+static LeftMenuCount s_LeftMenuCount ;
 
 namespace GlobalVar
 {
@@ -45,6 +46,10 @@ namespace GlobalVar
 
     const Properties& getProperties(){
         return s_Properties;
+    }
+
+    const LeftMenuCount& getLeftMenuCount(){
+        return s_LeftMenuCount;
     }
 
     void dispose() {

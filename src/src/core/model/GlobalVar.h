@@ -30,6 +30,7 @@ namespace GlobalVar
     const LoginLocation& getLoginLocation();  
     const User& getUser(); 
     const Properties& getProperties(); 
+    const LeftMenuCount& getLeftMenuCount();
 
     void dispose();
 } // namespace GlobalVar
