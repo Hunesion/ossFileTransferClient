@@ -4,6 +4,7 @@
 #include "ftchomeheaderrecvbox.h"
 #include "ftchomerecvlistsubpage.h"
 #include "ftchomeheadersendhistorybox.h"
+#include "ftchomesendhistorysubpage.h"
 #include "ftcmainwindow.h"
 #include "../core/TimeUtils.h"
 
@@ -36,6 +37,7 @@ struct _FtcHomePagePrivate
 
     FtcHomeDndSubPage *dnd_subpage;
     FtcHomeRecvListSubPage *recv_list_subpage;
+    FtcHomeSendHistorySubPage *send_history_subpage;
 
     //  유저 메뉴
     GtkMenu     *menu_user;
@@ -228,6 +230,10 @@ ftc_home_page_init (FtcHomePage *page)
 
     priv->header_send_history_box = ftc_home_header_send_history_box_new(page);
     gtk_stack_add_named(priv->stack_header_send_recv, GTK_WIDGET(priv->header_send_history_box), FTC_VIEW_HOME_HEADER_SEND_HISTORY);
+
+    //  Send History 설정 및 화면 Stack에 추가
+    priv->send_history_subpage = ftc_home_send_history_sub_page_new(page);
+    gtk_stack_add_named(priv->stack_list_send_recv, GTK_WIDGET(priv->send_history_subpage), FTC_VIEW_HOME_SUB_PAGE_SEND_HISTORY);
 
     //  Recv List 생성 및 화면 Stack에 추가
     //  Recv List 받아서 마지막으로 받은 요청을 dnd page에 전달
@@ -480,8 +486,6 @@ ftc_home_page_update_sub_page_event(Ftc::Core::Event *evt)
             }
             gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_DND);
         }
-    } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_SEND_LIST) {
-        
     } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_RECV_LIST) {    
         //  세션이 만료된 상태(모든 페이지가 Destroy)로 받기 페이지로 이동 시 GTK STACK CRITICAL 오류 발생
         if (GTK_IS_STACK(priv->stack_list_send_recv) && FTC_IS_HOME_RECV_LIST_SUB_PAGE(priv->recv_list_subpage)) {  
@@ -494,7 +498,15 @@ ftc_home_page_update_sub_page_event(Ftc::Core::Event *evt)
             gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_RECV_LIST);
         }
     } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_SEND_HISTORY) {
-        
+        if (GTK_IS_STACK(priv->stack_list_send_recv) && FTC_IS_HOME_SEND_HISTORY_SUB_PAGE(priv->send_history_subpage)) {
+            if ((strcmp(child_name, FTC_VIEW_HOME_HEADER_SEND_HISTORY) != 0) && GTK_IS_STACK(priv->stack_header_send_recv)) {
+                gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_header_send_recv), FTC_VIEW_HOME_HEADER_SEND_HISTORY);
+            }
+
+            ftc_home_send_history_sub_page_get_send_history_list(priv->send_history_subpage);
+            ftc_home_send_history_sub_page_list_box_unselect_all(priv->send_history_subpage);
+            gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_SEND_HISTORY);
+        }
     }
 }
 
@@ -565,6 +577,10 @@ ftc_home_page_send_history_refresh_event(Ftc::Core::Event *evt)
         return;
     }
 
+    if (! priv->send_history_subpage) {
+        return;
+    }
+    ftc_home_send_history_sub_page_get_send_history_list(priv->send_history_subpage);
 }
 
 static void
