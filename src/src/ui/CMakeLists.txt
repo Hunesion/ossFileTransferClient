@@ -14,6 +14,8 @@ add_library(hune_ui
             ftchomedndsubpage.cpp
             ftchomerecvlistsubpage.cpp
             ftchomerecvlistrow.cpp
+            ftchomesendhistorysubpage.cpp
+            ftchomesendhistoryrow.cpp
             ftcdetailrecvpage.cpp
             ftcdetailrecvrequestinfosubpage.cpp
             ftcdetailrecvfilelistsubpage.cpp
