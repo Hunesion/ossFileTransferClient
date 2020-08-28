@@ -1,5 +1,6 @@
 #include "ftchomesendhistorysubpage.h"
 #include "ftchomesendhistoryrow.h"
+#include "ftcdetailsendhistorypage.h"
 #include "ftcmainwindow.h"
 #include "../core/TimeUtils.h"
 #include <mutex>
@@ -17,6 +18,7 @@ typedef struct _FtcHomeSendHistorySubPagePrivate FtcHomeSendHistorySubPagePrivat
 struct _FtcHomeSendHistorySubPagePrivate
 {
     FtcHomePage *home_page;
+    FtcDetailSendHistoryPage *detail_send_history_page;
 
     GtkScrolledWindow *scrolled_window;
 
@@ -83,6 +85,10 @@ ftc_home_send_history_sub_page_init (FtcHomeSendHistorySubPage *page)
     FtcHomeSendHistorySubPagePrivate *priv = NULL;
     gtk_widget_init_template (GTK_WIDGET (page));
     priv = (FtcHomeSendHistorySubPagePrivate*)ftc_home_send_history_sub_page_get_instance_private (page);
+
+    //  Recv Detail Page 생성
+    priv->detail_send_history_page = ftc_detail_send_history_page_new(page);
+    ftc_main_window_set_detail_send_history_page(FTC_MAIN_WINDOW(ftc_ui_get_main_window()), priv->detail_send_history_page);
 
     //  Signal 연결
     g_signal_connect(priv->listbox_send_history, "row-selected", G_CALLBACK(ftc_home_send_history_sub_page_on_row_selected_list_box), page);
@@ -457,6 +463,7 @@ ftc_home_send_history_sub_page_list_box_select_row_and_batch_download(FtcHomeSen
     //gtk_list_box_select_row(priv->listbox_send_history, list_box_row);
     ftc_home_send_history_sub_page_select_list_row(page, list_row, ftc_request, request_down_state);
 
+    ftc_detail_send_history_page_file_download_all(priv->detail_send_history_page);
 }
 
 
@@ -621,7 +628,9 @@ ftc_home_send_history_sub_page_select_list_row(FtcHomeSendHistorySubPage *page, 
     if (! ftc_request || ! request_down_state) {
         return;
     }
-    
+
+    ftc_detail_send_history_page_set_data(priv->detail_send_history_page, ftc_request, request_down_state);
+
     if (ftc_request->is_read == false) {
         event_mgr = Ftc::Core::EventManager::getInstance();
         if (! event_mgr) {
