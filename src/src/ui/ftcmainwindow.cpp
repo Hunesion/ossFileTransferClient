@@ -15,7 +15,7 @@
 #include "ftchomepage.h"
 #include "ftcdetailrecvpage.h"
 // #include "ftcdetailsendpage.h"
-// #include "ftcdetailsendhistorypage.h"
+#include "ftcdetailsendhistorypage.h"
 
 #include <mutex>
 #include <sstream>
@@ -38,7 +38,7 @@ struct _FtcMainWindowPrivate
   FtcHomePage   *home_page;
   FtcDetailRecvPage *detail_recv_page;
   // FtcDetailSendPage *detail_send_page;
-  // FtcDetailSendHistoryPage *detail_send_history_page;
+  FtcDetailSendHistoryPage *detail_send_history_page;
 };
 
 G_DEFINE_TYPE_WITH_PRIVATE(FtcMainWindow, ftc_main_window, GTK_TYPE_APPLICATION_WINDOW);
@@ -299,13 +299,13 @@ ftc_main_window_set_detail_send_history_page(FtcMainWindow *main_window, gpointe
   if (! priv) {
     return;
   }
-  // if (! FTC_IS_DETAIL_SEND_HISTORY_PAGE(page)) {
-  //   FTC_LOG("ftc_main_window_set_detail_send_history_page invalid FtcDetailSendHistoryPage!!");
-  //   return;  
-  // }
+  if (! FTC_IS_DETAIL_SEND_HISTORY_PAGE(page)) {
+    FTC_LOG("ftc_main_window_set_detail_send_history_page invalid FtcDetailSendHistoryPage!!");
+    return;  
+  }
 
-  // priv->detail_send_history_page = FTC_DETAIL_SEND_HISTORY_PAGE(page);
-  // gtk_stack_add_named(GTK_STACK(priv->stack_extension), GTK_WIDGET(priv->detail_send_history_page), FTC_VIEW_WINDOW_PAGE_SEND_HISTORY_DETAIL);
+  priv->detail_send_history_page = FTC_DETAIL_SEND_HISTORY_PAGE(page);
+  gtk_stack_add_named(GTK_STACK(priv->stack_extension), GTK_WIDGET(priv->detail_send_history_page), FTC_VIEW_WINDOW_PAGE_SEND_HISTORY_DETAIL);
 }
 
 gpointer            
@@ -356,5 +356,5 @@ ftc_main_window_get_detail_send_history_page(FtcMainWindow *main_window)
     return NULL;
   }
 
-  //return priv->detail_send_history_page;
+  return priv->detail_send_history_page;
 }
