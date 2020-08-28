@@ -267,6 +267,7 @@ bool EventManager::dispatchEvent(const char *eventName , void *userData) {
     if (it == this->_eventMap.end() || it->second.size() == 0) return rv ; 
 
     Event *event = Event::create(eventName, userData); 
+    if (event == nullptr) return rv;
 
     for (auto listIt = it->second.begin() ; listIt != it->second.end() ; listIt++){
         listener = *listIt ; 
