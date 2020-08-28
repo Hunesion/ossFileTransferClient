@@ -44,6 +44,17 @@ namespace GlobalStruct
         std::string     receive_user_group_name;
     } FtcRequestInfo;
 
+    typedef struct _FtcNetwork
+    {
+        std::string direction;
+        std::string from_network_id;
+        std::string from_network_name;
+        std::string network_direction_id;
+        std::string to_name;
+        std::string to_network_name;
+        std::string to_network_id;
+    } FtcNetwork;
+
     typedef struct _FtcRequest {
         std::vector<FtcRequestInfoFile> vc_file_info;
         FtcRequestInfo      ftc_request_info;
