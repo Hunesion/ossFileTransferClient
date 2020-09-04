@@ -1,6 +1,7 @@
 #include "ftchomepage.h"
 #include "ftchomeheadersendbox.h"
 #include "ftchomedndsubpage.h"
+#include "ftchomesendlistsubpage.h"
 #include "ftchomeheaderrecvbox.h"
 #include "ftchomerecvlistsubpage.h"
 #include "ftchomeheadersendhistorybox.h"
@@ -36,6 +37,7 @@ struct _FtcHomePagePrivate
     FtcHomeHeaderSendHistoryBox *header_send_history_box;
 
     FtcHomeDndSubPage *dnd_subpage;
+    FtcHomeSendListSubPage *send_list_subpage;
     FtcHomeRecvListSubPage *recv_list_subpage;
     FtcHomeSendHistorySubPage *send_history_subpage;
 
@@ -216,6 +218,10 @@ ftc_home_page_init (FtcHomePage *page)
     //  stack_send_info 에 기본 drag and drop & recv 화면 설정
     priv->dnd_subpage = ftc_home_dnd_sub_page_new(page);
     gtk_stack_add_named(priv->stack_list_send_recv, GTK_WIDGET(priv->dnd_subpage), FTC_VIEW_HOME_SUB_PAGE_DND);
+
+    //  Send List 생성 및 화면 Stack에 추가
+    priv->send_list_subpage = ftc_home_send_list_sub_page_new(page);
+    gtk_stack_add_named(priv->stack_list_send_recv, GTK_WIDGET(priv->send_list_subpage), FTC_VIEW_HOME_SUB_PAGE_SEND_LIST);
 
     //  Recv Header 설정 -> RecvList페이지에서 header_recv_box로 데이터를 전달해야 함
     priv->header_recv_box = ftc_home_header_recv_box_new(page, FTC_VIEW_HOME_SUB_PAGE_DND);
@@ -486,6 +492,15 @@ ftc_home_page_update_sub_page_event(Ftc::Core::Event *evt)
             }
             gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_DND);
         }
+    } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_SEND_LIST) {
+        if (GTK_IS_STACK(priv->stack_list_send_recv) && FTC_IS_HOME_SEND_LIST_SUB_PAGE(priv->send_list_subpage)) {
+            if ((strcmp(child_name, FTC_VIEW_HOME_HEADER_SEND) != 0) && GTK_IS_STACK(priv->stack_header_send_recv)) {
+                gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_header_send_recv), FTC_VIEW_HOME_HEADER_SEND);
+            }
+
+            gtk_stack_set_visible_child_name(GTK_STACK(priv->stack_list_send_recv), FTC_VIEW_HOME_SUB_PAGE_SEND_LIST);
+            ftc_home_send_list_sub_page_enable(priv->send_list_subpage);
+        }
     } else if (param->page_name == FTC_VIEW_HOME_SUB_PAGE_RECV_LIST) {    
         //  세션이 만료된 상태(모든 페이지가 Destroy)로 받기 페이지로 이동 시 GTK STACK CRITICAL 오류 발생
         if (GTK_IS_STACK(priv->stack_list_send_recv) && FTC_IS_HOME_RECV_LIST_SUB_PAGE(priv->recv_list_subpage)) {  
@@ -535,6 +550,11 @@ ftc_home_page_send_list_add_file_event(Ftc::Core::Event *evt)
         return;
     }
 
+    if (! priv->send_list_subpage) {
+        return;
+    }
+    
+    ftc_home_send_list_sub_page_add_list(priv->send_list_subpage, param->file_path.c_str());
 }
 
 void           
