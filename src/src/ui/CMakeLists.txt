@@ -20,6 +20,12 @@ add_library(hune_ui
             ftcdetailrecvrequestinfosubpage.cpp
             ftcdetailrecvfilelistsubpage.cpp
             ftcdetailrecvfilelistrow.cpp
+            ftcdetailsendhistoryfilelistrow.cpp
+            ftcdetailsendhistoryfilelistsubpage.cpp
+            ftcdetailsendhistorypage.cpp
+            ftcdetailsendhistoryrequestinfosubpage.cpp
+            ftchomesendlistsubpage.cpp
+            ftchomesendlistrow.cpp
             ../dbus/playback.c
             ../webkit/ftcwebkit.cpp
             ../webkit/ftcdbusserver.cpp
