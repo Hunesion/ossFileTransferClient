@@ -95,6 +95,14 @@ namespace GlobalStruct
         std::string network_id;
         std::string ip;
     } FtcTargetInfo;
+
+    typedef struct _FtcUser
+    {
+        std::string user_id;
+        std::string user_name;
+        bool is_group;
+        bool is_include_sub_group;
+    } FtcUser;
 }
 
 END_FTC_CORE
