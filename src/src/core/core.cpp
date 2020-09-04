@@ -24,6 +24,7 @@ bool ftc_core_init(){
     GlobalVar::init(); 
     evtManager = EventManager::getInstance(); 
     sockServer = SocketServer::getInstance(); 
+    if (evtManager == nullptr || sockServer == nullptr) return rv;
 
     ftc_system_init();
 
