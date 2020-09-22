@@ -54,7 +54,7 @@ private:
     bool urlRedirection(std::string &data, std::vector<std::string> &splitData);
     bool autoDownload(std::string &data, std::vector<std::string> &splitData);
 
-    std::list<std::string> downloadFile(std::string requestInfoUid, std::string localIp, const std::string &dir);
+    std::list<std::string> downloadFile(const std::string &requestInfoUid, const std::string &localIp, const std::string &dir);
 
 private: 
     static SocketServer *s_instance ; 

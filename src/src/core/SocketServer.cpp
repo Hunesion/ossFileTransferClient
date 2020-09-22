@@ -15,7 +15,10 @@
 #include "StringUtils.h"
 #include "urlencode.h"
 #include "FileUtils.h"
+#include "UrlRedirection.h"
+#include "Clipboard.h"
 #include "model/GlobalVar.h"
+#include "transfer/Download.h"
 #include <memory>
 
 
@@ -235,8 +238,6 @@ bool SocketServer::stop(){
     return rv ; 
 }
 
-
-
 bool SocketServer::work(std::string data) {
     bool rv = false;
     std::vector<std::string> splitData;
@@ -246,8 +247,6 @@ bool SocketServer::work(std::string data) {
     FTC_LOG("Socket Data : %s", data.c_str());
 
     splitData = StringUtils::splitToVector(data, '&');
-    portStr = splitData[1];
-    port = StringUtils::getInt(portStr.c_str());
     flag = splitData[2];
 
     if (flag == FTC_SOCKET_DATA_FLAG_URL_REDIRECTION) {
@@ -264,24 +263,88 @@ bool SocketServer::work(std::string data) {
 bool SocketServer::clipboard(std::string &data, std::vector<std::string> &splitData)
 {
     bool rv = false;
+    Clipboard *clipboard = Clipboard::getInstance();
+    std::list<std::string> fileList;
+    std::string &requestInfoUid = splitData[4];
+    std::string &localIp = splitData[1];
+
+    fileList = downloadFile(requestInfoUid, localIp, "/tmp");
+    if (fileList.size() <= 0) {
+        return rv;
+    }   
+
+    for (auto &it : fileList) {
+        clipboard->loadFile(it.c_str());
+    }
+
+    rv = true;
+
     return rv;
 }
 
 bool SocketServer::urlRedirection(std::string &data, std::vector<std::string> &splitData)
 {
     bool rv = false;
+    std::list<std::string> fileList;
+    std::string &requestInfoUid = splitData[4];
+    std::string &localIp = splitData[1];
+
+    fileList = downloadFile(requestInfoUid, localIp, "/tmp");
+    if (fileList.size() <= 0) {
+        return rv;
+    }
+
+    //  파일을 읽고 인터넷 브라우저를 실행한다.
+    //
+    for (auto &it : fileList) {
+        loadUrl(it.c_str());
+    }
+
+    rv = true;
     return rv;
 }
 
 bool SocketServer::autoDownload(std::string &data, std::vector<std::string> &splitData)
 {
     bool rv = false;
+    std::string &requestInfoUid = splitData[3];
+    std::string &localIp = splitData[1];
+
+
     return rv;
 }
 
-std::list<std::string> SocketServer::downloadFile(std::string requestInfoUid, std::string localIp, const std::string &dir)
+std::list<std::string> SocketServer::downloadFile(const std::string &requestInfoUid, const std::string &localIp, const std::string &dir)
 {
+    Transfer::Download *download = NULL;
     std::list<std::string> rv;
+
+    download = Transfer::Download::getInstance();
+    if (! download) {
+        return rv;
+    }
+
+    auto downRequest = download->getDownloadList(requestInfoUid, localIp);
+    if (! downRequest) {
+        return rv;
+    }
+
+    downRequest->setDirectory(dir);
+
+    auto downFileList = downRequest->getDownlaodFiles();
+    for (auto &it : downFileList) {
+        if (download->downloadFile(it) == false) {
+            FTC_LOG("%s download fail : %s", it->getFilename().c_str(), it->getErrorMsg().c_str());
+        }
+    }
+
+    for (auto &it : downFileList) {
+        std::string path;
+
+        path = dir + "/" + it->getFilename();
+        rv.push_back(path);
+    }
+
     return rv;
 }
 
