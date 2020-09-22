@@ -1,5 +1,6 @@
 #include "ftchomesendlistrow.h"
 #include "ftchomesendlistsubpage.h"
+#include "ftcdetailsendpage.h"
 #include "ftcmainwindow.h"
 #include "../core/model/UploadOption.h"
 #include "../core/StringUtils.h"
@@ -23,6 +24,7 @@ struct _FtcHomeSendListSubPagePrivate
     FtcHomePage *home_page;
 
     /* 소스에서 정의 */
+    FtcDetailSendPage *detail_send_page;
     Ftc::Core::PackFilePop *pack_file_pop;
     Ftc::Core::Transfer::Upload *upload;
     Ftc::Core::UploadOption *uploading_option;
@@ -171,6 +173,10 @@ ftc_home_send_list_sub_page_init (FtcHomeSendListSubPage *page)
     gtk_widget_init_template (GTK_WIDGET (page));
     priv = (FtcHomeSendListSubPagePrivate*)ftc_home_send_list_sub_page_get_instance_private (page);
 
+    //  Detail Send Page 생성
+    priv->detail_send_page = ftc_detail_send_page_new(page);
+    ftc_main_window_set_detail_send_page(FTC_MAIN_WINDOW(ftc_ui_get_main_window()), priv->detail_send_page);
+
     //  PackFile 클래스 생성
     priv->pack_file_pop = new Ftc::Core::PackFilePop(Ftc::Core::GlobalVar::getLoginLocation().getNetworkId());
 
@@ -314,6 +320,8 @@ ftc_home_send_list_sub_page_enable(FtcHomeSendListSubPage *page)
 
     ftc_home_send_list_sub_page_activate_extension_window(page, true);
     
+    ftc_detail_send_page_enable(priv->detail_send_page, priv->pack_file_pop);
+
     //  InfoBox에 타이틀을 기본으로 첫번째 파일 명으로 설정
     //
     if (ftc_home_send_list_sub_page_list_box_get_size(page) > 0) {
@@ -349,6 +357,8 @@ ftc_home_send_list_sub_page_disable(FtcHomeSendListSubPage *page)
 
     ftc_home_send_list_sub_page_list_box_clear(page);
     ftc_home_send_list_sub_page_update_extension_btn_image(page);
+
+    ftc_detail_send_page_disable(priv->detail_send_page);
 
     priv->pack_file_pop->clear();
     priv->uploading_option = NULL;
@@ -602,6 +612,10 @@ ftc_home_send_list_sub_page_on_click_btn_send_apply(GtkWidget *widget, gpointer 
 
     list_file_info = ftc_home_send_list_sub_page_get_file_list(page);
 
+    upload_option = ftc_detail_send_page_get_upload_option(priv->detail_send_page);
+    if (! upload_option) {
+        return;
+    }
     upload_option->setSendTitle(gtk_entry_get_text(priv->etr_send_title));
 
     if (ftc_home_send_list_sub_page_validate_input(page, upload_option) == false) {
