@@ -15,6 +15,11 @@ set(RESOURCE_LIST
     ftc-detail-recv-file-list-sub-page.ui
     ftc-detail-recv-file-list-row.ui
     ftc-detail-recv-request-info-sub-page.ui
+    ftc-detail-send-page.ui
+    ftc-detail-send-history-request-info-sub-page.ui
+    ftc-detail-send-history-page.ui
+    ftc-detail-send-history-file-list-sub-page.ui
+    ftc-detail-send-history-file-list-row.ui
     style.css
     ADD-ICON-16PX.png
     APPROVAL-ICON-16PX.png

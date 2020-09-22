@@ -16,6 +16,8 @@ add_library(hune_ui
             ftchomerecvlistrow.cpp
             ftchomesendhistorysubpage.cpp
             ftchomesendhistoryrow.cpp
+            ftchomesendlistsubpage.cpp
+            ftchomesendlistrow.cpp
             ftcdetailrecvpage.cpp
             ftcdetailrecvrequestinfosubpage.cpp
             ftcdetailrecvfilelistsubpage.cpp
@@ -24,8 +26,7 @@ add_library(hune_ui
             ftcdetailsendhistoryfilelistsubpage.cpp
             ftcdetailsendhistorypage.cpp
             ftcdetailsendhistoryrequestinfosubpage.cpp
-            ftchomesendlistsubpage.cpp
-            ftchomesendlistrow.cpp
+            ftcdetailsendpage.cpp
             ../dbus/playback.c
             ../webkit/ftcwebkit.cpp
             ../webkit/ftcdbusserver.cpp

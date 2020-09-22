@@ -17,6 +17,9 @@ add_library(hune_core
             sys_utils.cpp
             SocketServer.cpp
             bind.c
+            CommonUtils.cpp
+            UrlRedirection.cpp
+            Clipboard.cpp
             model/ValueObject.cpp
             model/ClientConfig.cpp
             model/GlobalVar.cpp
