@@ -19,5 +19,10 @@
 #define FTC_CORE_DOWNLOAD_RECV_RESULT_EVENT    "Ftc::Core::DownloadRecvResult"
 #define FTC_CORE_DOWNLOAD_HISTORY_RESULT_EVENT    "Ftc::Core::DownloadHistoryResult"
 #define FTC_CORE_UPLOAD_RESULT_EVENT    "Ftc::Core::UploadResult"
+#define FTC_CORE_CLIPBOARD_SET_TEXT "Ftc::Core::ClipboardSetText"
+#define FTC_CORE_CLIPBOARD_SET_IMAGE "Ftc::Core::ClipboardSetImage"
+#define FTC_CORE_CLIPBOARD_SET_RICHTEXT "Ftc::Core::ClipboardSetRichText"
+#define FTC_CORE_DESKTOP_NOTIFICATION "Ftc::Core::DesktopNotification"
+#define FTC_CORE_MESSAGE_BOX "Ftc::Core::MessageBox"
 
 #endif /* _FTC_CORE_EVENT_H_ */

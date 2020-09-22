@@ -26,4 +26,8 @@
 
 #define FTC_UI_SEND_URL_REDIRECTION             "Ftc::Ui::SendUrlRedirection"
 
+#define FTC_UI_SELECT_RECEIVE_USER              "Ftc::Ui::SelectReceiveUser"
+
+#define FTC_UI_SELECT_INIT_PACK_FILE_POP_CONFIG "Ftc::Ui::InitPackFilePopConfig"
+
 #endif /* _FTC_UI_EVENT_H_ */
