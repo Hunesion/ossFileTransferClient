@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <!-- interface-requires gtk+ 3.0 -->
+  <template class="FtcDetailSendHistoryPage" parent="GtkBox">
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkBox" id="box_header_title">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkLabel" id="lbl_title">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="halign">start</property>
+            <property name="valign">start</property>
+            <property name="margin_top">11</property>
+            <property name="margin_bottom">10</property>
+            <property name="margin_left">15</property>
+            <property name="label" translatable="yes">label_title</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEventBox" id="event_box_close">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_right">15</property>
+            <property name="margin_top">14</property>
+            <property name="margin_bottom">15</property>
+            <child>
+              <object class="GtkImage" id="imgbtn_close">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="stock">gtk-missing-image</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEventBox" id="event_box_info">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">14</property>
+            <property name="margin_bottom">15</property>
+            <child>
+              <object class="GtkImage" id="imgbtn_info">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="stock">gtk-missing-image</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkStack" id="stack_subpage">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox" id="box5">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkImage" id="img_list">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="stock">gtk-missing-image</property>
+            <property name="margin_left">15</property>
+            <property name="margin_bottom">22</property>
+            <property name="valign">end</property>
+            <property name="halign">start</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="lbl_summary">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">label</property>
+            <property name="margin_left">5</property>
+            <property name="margin_bottom">21</property>
+            <property name="valign">end</property>
+            <property name="halign">start</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_open_directory">
+            <property name="label" translatable="yes">폴더열기</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="margin_right">15</property>
+            <property name="margin_bottom">10</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+            <property name="pack_type">end</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="btn_download">
+            <property name="label" translatable="yes">받기</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="margin_right">10</property>
+            <property name="margin_bottom">10</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+            <property name="pack_type">end</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+        <property name="pack_type">end</property>
+      </packing>
+    </child>
+  </template>
+</interface>
