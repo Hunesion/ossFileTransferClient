@@ -64,6 +64,7 @@ static gboolean event_source_func(gpointer data){
     EventCustom *evt = nullptr ; 
     int loopCount = 0 ; 
     Ftc::Core::EventManager *manager = Ftc::Core::EventManager::getInstance(); 
+    if (manager == nullptr) return rv;
 
     do {
         if (loopCount > 3) break ; 

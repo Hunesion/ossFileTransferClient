@@ -165,7 +165,7 @@ void Clipboard::sendThread(char *toNetwrokIp, char *sendData, unsigned int dataL
     
     try
     {
-        if (! toNetwrokIp || ! sendData || sendData <= 0) {
+        if (! toNetwrokIp || ! sendData || dataLen <= 0) {
             throw std::runtime_error("");
         }
 
