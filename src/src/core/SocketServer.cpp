@@ -17,6 +17,7 @@
 #include "FileUtils.h"
 #include "UrlRedirection.h"
 #include "Clipboard.h"
+#include "CommonUtils.h"
 #include "model/GlobalVar.h"
 #include "transfer/Download.h"
 #include <memory>
@@ -306,11 +307,57 @@ bool SocketServer::urlRedirection(std::string &data, std::vector<std::string> &s
 
 bool SocketServer::autoDownload(std::string &data, std::vector<std::string> &splitData)
 {
-    bool rv = false;
+    const ClientConfig &clientConfig = GlobalVar::getClientConfig();
+    const Properties &properties = GlobalVar::getProperties();
+    Transfer::Download *download = NULL;
+    EventManager *event_mgr = EventManager::getInstance();
+    std::string dir, fullpath, relative_dir;
     std::string &requestInfoUid = splitData[3];
     std::string &localIp = splitData[1];
+    bool rv = false;
 
+    if (event_mgr) { 
+        event_mgr->dispatchEventAsync(FTC_CORE_RECV_LIST_REFRESH);
+    } 
 
+    download = Transfer::Download::getInstance();
+    if (! download) {
+        return rv;
+    }
+
+    auto downRequest = download->getDownloadList(requestInfoUid, localIp);
+    if (! downRequest) {
+        return rv;
+    }
+
+    dir = clientConfig.getUserDownloadDirPath();
+    downRequest->setDirectory(dir);
+
+    auto downloadFileList = downRequest->getDownlaodFiles();
+    if (downloadFileList.size() <= 0) {
+        return rv;
+    }
+
+    for (auto it : downloadFileList) {
+        fullpath = dir + "/";
+        relative_dir = it->getRelativeDir();
+        if (relative_dir.length() > 0) {
+            fullpath += relative_dir + "/";
+        }
+        fullpath += it->getFilename();
+
+        it->setFilename(FileUtils::getFileNameUniqueIndex(fullpath.c_str()));
+    }
+
+    for (auto it : downloadFileList) {
+        download->downloadFile(it);
+    }
+
+    ftc_open_default_uri(dir);
+
+    CommonUtils::callNotificationEvent("자동 다운로드가 완료되었습니다.");
+    
+    rv = true;
     return rv;
 }
 
