@@ -37,7 +37,8 @@
 ## **시작하기**
 이  지침에  따라  개발  프로젝트에  참여할  수  있습니다.
 
-프로젝트가  설계단계에  있기  때문에  프로젝트  개발에  대한  자세한  지침은  단계적으로  추가될  예정입니다.
+### **빌드하기**
+ossFileTransferClient를 빌드하려면 [WIKI:Build](https://github.com/HuneOpenUp/ossFileTransferClient/wiki/Build)를 참조하십시오.
 
 ## **전제조건**
 이  프로젝트는  각각의  개방형OS를  공통적으로  지원하기  위해 GTK+ 3.0 기반으로  개발할  예정입니다.
