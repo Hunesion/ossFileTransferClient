@@ -123,6 +123,7 @@ ftc_main_window_init (FtcMainWindow *win)
   event_mgr = Ftc::Core::EventManager::getInstance();
   if (! event_mgr) {
     ftc_ui_fail_show_message_and_quit("이벤트 매니저 인스턴스 생성 실패");
+    return;
   } else {
     event_mgr->addEventListener(win, FTC_CORE_LOGIN_LOCATION_EVENT, [](Ftc::Core::Event *evt){
       Ftc::Core::LoginLocation login_location = Ftc::Core::GlobalVar::getLoginLocation();
