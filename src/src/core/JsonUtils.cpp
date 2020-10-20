@@ -330,10 +330,8 @@ namespace JsonUtils{
         if (rv == NULL) return rv; 
         json_node_set_object(rv , *obj); 
 
-        if (obj && *obj){
-            json_object_unref(*obj); 
-            *obj = NULL ; 
-        }
+        json_object_unref(*obj); 
+        *obj = NULL ; 
 
         return rv;
     }
@@ -360,10 +358,8 @@ namespace JsonUtils{
             str = NULL ; 
         }
 
-        if (obj && *obj){
-            json_object_unref(*obj); 
-            *obj = NULL ; 
-        }
+        json_object_unref(*obj); 
+        *obj = NULL ; 
 
         if (node){
             json_node_free(node); 
