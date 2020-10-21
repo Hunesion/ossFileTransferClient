@@ -45,9 +45,7 @@ ossFileTransferClient를 빌드하려면 [WIKI:Build](https://github.com/HuneOpe
 
 기존  솔루션에  개방형OS 클라이언트를  추가하는  것이므로  윈도우용  클라이언트에서  지원하는  기능을  전환하여  개발합니다. 
 다만, 기존  윈도우용  클라이언트의 UI 대신에  새로운 UI로  개발하기  위해  신규UI와  이에  따른  설계를  진행하고, 
-기본적인 UI가  개발되는  시점부터  이를  기반으로  각각의  기능  모듈  단위로  소스를  공개할  예정입니다.
-
-구체적인  일정과  지침은  단계적으로  공유할  예정입니다.
+기본적인 UI가  개발되는  시점부터  이를  기반으로  각각의  기능  모듈  단위로  소스를  공개합니다.
 
 ## **기여**
 [CONTRIBUTION.md](https://github.com/HuneOpenUp/ossFileTransferClient/blob/master/CONTRIBUTING.md) 파일을  읽어  주십시오. 당사의  행동강령과  요청접수  절차에  대한  자세한  내용을  확인하실  수  있습니다.
