@@ -1,6 +1,7 @@
 #include "ftcdetailsendhistoryrequestinfosubpage.h"
 #include "../core/StringUtils.h"
 #include <glib/gprintf.h>
+#include <iomanip>
 
 typedef struct _FindRequestInfoParam
 {
@@ -255,6 +256,7 @@ ftc_detail_send_history_request_info_sub_page_update_target_network_screen(FtcDe
     std::time_t now_date = std::time(NULL), tmp_date, calc_date;
     std::tm now_tm, tmp_tm;
     int seconds = 0, expired_days = 0;
+    std::istringstream iss;
 
     if (! FTC_IS_DETAIL_SEND_HISTORY_REQUEST_INFO_SUB_PAGE(page)) {
         return;
@@ -274,9 +276,14 @@ ftc_detail_send_history_request_info_sub_page_update_target_network_screen(FtcDe
     if (priv->selection_request_info->download_expire_dt.length() > 0) {
         localtime_r(&now_date, &now_tm);
 
-        tmp_tm.tm_year = atoi(priv->selection_request_info->download_expire_dt.substr(0, 4).c_str()) - 1900;
-        tmp_tm.tm_mon = atoi(priv->selection_request_info->download_expire_dt.substr(4, 2).c_str()) - 1;
-        tmp_tm.tm_mday = atoi(priv->selection_request_info->download_expire_dt.substr(6, 2).c_str());
+        iss.str(priv->selection_request_info->download_expire_dt);
+        iss >> std::get_time(&tmp_tm, "%Y%m%d");
+        
+        // expire data parse fail
+        if (iss.fail()) {
+            str = "유효기간 파싱 오류";
+        }
+
         //  시간 계산 시 초단위 까지 계산함으로 유효 날짜(일 단위)로 표기하기 위해 현재 시분초를 넣어준다.
         tmp_tm.tm_hour = now_tm.tm_hour;
         tmp_tm.tm_min = now_tm.tm_min;
@@ -285,8 +292,8 @@ ftc_detail_send_history_request_info_sub_page_update_target_network_screen(FtcDe
         tmp_date = std::mktime(&tmp_tm);
         seconds = std::difftime(tmp_date, now_date);
 
-        g_snprintf(datetime, sizeof(datetime), "%s-%s-%s",
-                priv->selection_request_info->download_expire_dt.substr(0, 4).c_str(), priv->selection_request_info->download_expire_dt.substr(4, 2).c_str(), priv->selection_request_info->download_expire_dt.substr(6, 2).c_str());
+        std::strftime(datetime, sizeof(datetime), "%Y-%m-%d", &tmp_tm);
+        
         if (seconds > 0) {
             //  유효기간이 남아있음
             expired_days = seconds / 60 / 60 / 24;
