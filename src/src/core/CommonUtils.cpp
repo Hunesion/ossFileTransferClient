@@ -55,10 +55,10 @@ namespace CommonUtils
         random = new char[length + 1];
         memset(random, 0, length + 1);
 
-        srand(time(0));
+        unsigned int seed = time(0);
 
         for (int i = 0; i < length; ++i) {
-            random[i] = alphanum[rand() % (sizeof(alphanum) - 1)];
+            random[i] = alphanum[rand_r(&seed) % (sizeof(alphanum) - 1)];
         } 
 
         rv = random;
