@@ -12,7 +12,7 @@
 
 #include "ftcuicommon.h"
 #include <sstream>
-
+#include <iomanip>
 
 bool        
 ftc_ui_is_internal_location()
@@ -174,25 +174,28 @@ ftc_ui_is_expired_date_request_info(const std::string &expired_date/*YYYYMMDD*/)
 {
     std::time_t now_date = std::time(NULL), tmp_date, calc_date;
     std::tm now_tm, tmp_tm;
+    std::istringstream iss;
     int seconds = 0;
     bool rv = false;
 
     localtime_r(&now_date, &now_tm);
+    
+    iss.str(expired_date);
+    iss >> std::get_time(&tmp_tm, "%Y%m%d");
+    
+    // expire data parse not fail
+    if (!iss.fail()) {
+        //  시간 계산 시 초단위 까지 계산함으로 유효 날짜(일 단위)로 표기하기 위해 현재 시분초를 넣어준다.
+        tmp_tm.tm_hour = now_tm.tm_hour;
+        tmp_tm.tm_min = now_tm.tm_min;
+        tmp_tm.tm_sec = now_tm.tm_sec;
 
-    tmp_tm.tm_year = atoi(expired_date.substr(0, 4).c_str()) - 1900;
-    tmp_tm.tm_mon = atoi(expired_date.substr(4, 2).c_str()) - 1;
-    tmp_tm.tm_mday = atoi(expired_date.substr(6, 2).c_str());
-    //  시간 계산 시 초단위 까지 계산함으로 유효 날짜(일 단위)로 표기하기 위해 현재 시분초를 넣어준다.
-    tmp_tm.tm_hour = now_tm.tm_hour;
-    tmp_tm.tm_min = now_tm.tm_min;
-    tmp_tm.tm_sec = now_tm.tm_sec;
-
-    tmp_date = std::mktime(&tmp_tm);
-    seconds = std::difftime(tmp_date, now_date);
-    if (seconds <= 0) {
-        rv = true;
+        tmp_date = std::mktime(&tmp_tm);
+        seconds = std::difftime(tmp_date, now_date);
+        if (seconds <= 0) {
+            rv = true;
+        }
     }
-
     return rv;
 }
 
