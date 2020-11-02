@@ -17,11 +17,9 @@ BEGIN_FTC_CORE
 bool openUrl(const char *url)
 {
     std::string command, urlStr;
-    int ret = 0;
-    bool rv = true;
 
     if (! url) {
-        return rv;
+        return false;
     }
 
     urlStr = url;
@@ -30,9 +28,7 @@ bool openUrl(const char *url)
         urlStr = urlStr.insert(0, "http://");
     }
 
-    ret = ftc_open_url(urlStr);
-    
-    return rv;
+    return !ftc_open_url(urlStr);
 }
 
 bool loadUrl(const char *filepath)
