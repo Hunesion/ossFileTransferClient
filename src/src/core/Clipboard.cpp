@@ -11,7 +11,6 @@
 #include <memory>
 #include <thread>
 
-#define HUNE_CLIPBOARD_SIGNATURE                "HNSCLIP"
 #define CLIPBOARD_FORMAT_IMAGE_PUBLIC_TIFF      "public.tiff"
 #define CLIPBOARD_FORMAT_IMAGE_BITMAP           "Bitmap"
 #define CLIPBOARD_FORMAT_TEXT_CSHARP            "Text"
@@ -223,6 +222,10 @@ bool Clipboard::send(const char *to_network_ip)
             //  클립보드를 읽어내지 못하여 전송할 수 없습니다.
             throw std::runtime_error("클립보드를 읽어내지 못하여 전송할 수 없습니다.");
         }
+        if (this->checkAllowFormat(format) == false) {
+            throw std::runtime_error("허용되지 않은 클립보드 유형입니다.");
+        }
+
         allocToNetowrkIp = g_strdup(to_network_ip);
 
         thread = std::thread(Clipboard::sendThread, allocToNetowrkIp, data, dataLen);
@@ -650,4 +653,32 @@ ClipboardFormat Clipboard::readFormatData(GInputStream *istream)
     return rv;
 }
 
+bool Clipboard::checkAllowFormat(FORMAT format)
+{
+    const User &user = GlobalVar::getUser();
+    const std::vector<std::string> &allowFormats = user.getFormatsAllowList();
+    std::string formatString;
+    bool rv = false;
+
+    switch (format)
+    {
+    case FORMAT::TEXT :
+        formatString = CLIPBOARD_FORMAT_TEXT_PLAIN;
+        break;
+    case FORMAT::IMAGE :
+        formatString = CLIPBOARD_FORMAT_IMAGE_PUBLIC_TIFF;
+        break;
+    default:
+        return rv;
+    }
+
+    for (auto it : allowFormats) {
+        if (it == formatString) {
+            rv = true;
+            break;
+        }
+    }
+
+    return rv;
+}
 END_FTC_CORE

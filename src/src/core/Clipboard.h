@@ -63,6 +63,7 @@ private:
     bool getTextData(char **buffer, unsigned int *len);
 
     ClipboardFormat readFormatData(GInputStream *istream);
+    bool checkAllowFormat(FORMAT format);
 private: 
     static Clipboard *s_instance ; 
     GtkWidget *_main_window ;

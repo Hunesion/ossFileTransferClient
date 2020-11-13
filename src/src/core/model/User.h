@@ -17,7 +17,8 @@ protected :
     FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _result, Result);
     FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _contact, Contact); 
     FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _userid, UserId); 
-    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _network_id, NetworkId); 
+    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::string , _network_id, NetworkId);
+    FTC_SYNTHESIZE_READONLY_PASS_BY_REF(std::vector<std::string> , _formats_allow_list, FormatsAllowList);  
 private: 
     JsonObject *_obj ; 
 }; 
