@@ -1,4 +1,5 @@
 #include "../JsonUtils.h"
+#include "../StringUtils.h"
 #include "User.h"
 
 
@@ -26,6 +27,8 @@ bool User::parseJsonNode(JsonNode *node) {
     this->_contact = JsonUtils::getStdString(this->_obj, "contact");
     this->_userid = JsonUtils::getStdString(this->_obj, "userid");
     this->_network_id = JsonUtils::getStdString(this->_obj, "network_id");
+    tmp_str = JsonUtils::getStdString(this->_obj, "formats_allow_list");
+    this->_formats_allow_list = StringUtils::splitToVector(tmp_str, ',');
 
     rv = true ; 
     return rv ; 
